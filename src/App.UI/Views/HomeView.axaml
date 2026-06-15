@@ -1,0 +1,130 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:App.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+             x:Class="App.UI.Views.HomeView"
+             x:DataType="viewmodels:HomeViewModel">
+    <DockPanel Margin="24">
+
+        <!-- 顶栏：标题 + 时间 -->
+        <Border DockPanel.Dock="Top" Margin="0,0,0,20">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel>
+                    <TextBlock Text="{Binding Title}"
+                               FontSize="22" FontWeight="600"
+                               Foreground="{DynamicResource SystemAccentColor}" />
+                    <TextBlock Text="物流上位机监控系统 · 实时概览"
+                               FontSize="13" Foreground="#888" Margin="0,4,0,0" />
+                </StackPanel>
+                <Border Grid.Column="1" Padding="12,6" CornerRadius="6"
+                        BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1">
+                    <TextBlock Text="{Binding CurrentTime}"
+                               FontSize="14" FontWeight="500" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- 状态卡片区 -->
+        <ScrollViewer DockPanel.Dock="Top" Margin="0,0,0,16">
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="14">
+                <!-- 在线设备 -->
+                <Border Padding="20" CornerRadius="10"
+                        Background="{DynamicResource SystemAccentColor}" Opacity="0.9">
+                    <StackPanel>
+                        <TextBlock Text="在线设备" FontSize="13" Foreground="#DDD" />
+                        <TextBlock Text="{Binding OnlineDevices}"
+                                   FontSize="36" FontWeight="700" Foreground="White"
+                                   Margin="0,8,0,0" />
+                        <TextBlock Text="台" FontSize="13" Foreground="#DDD" Margin="0,2,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <!-- 执行中任务 -->
+                <Border Padding="20" CornerRadius="10" Background="#2E7D32" Opacity="0.9">
+                    <StackPanel>
+                        <TextBlock Text="执行中任务" FontSize="13" Foreground="#CCC" />
+                        <TextBlock Text="{Binding RunningTasks}"
+                                   FontSize="36" FontWeight="700" Foreground="White"
+                                   Margin="0,8,0,0" />
+                        <TextBlock Text="个" FontSize="13" Foreground="#CCC" Margin="0,2,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <!-- 今日完成 -->
+                <Border Padding="20" CornerRadius="10" Background="#1565C0" Opacity="0.9">
+                    <StackPanel>
+                        <TextBlock Text="今日完成" FontSize="13" Foreground="#CCC" />
+                        <TextBlock Text="{Binding TodayCompletedTasks}"
+                                   FontSize="36" FontWeight="700" Foreground="White"
+                                   Margin="0,8,0,0" />
+                        <TextBlock Text="个任务" FontSize="13" Foreground="#CCC" Margin="0,2,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <!-- 活跃报警 -->
+                <Border Padding="20" CornerRadius="10" Background="#C62828" Opacity="0.9">
+                    <StackPanel>
+                        <TextBlock Text="活跃报警" FontSize="13" Foreground="#CCC" />
+                        <TextBlock Text="{Binding ActiveAlarms}"
+                                   FontSize="36" FontWeight="700" Foreground="White"
+                                   Margin="0,8,0,0" />
+                        <TextBlock Text="条" FontSize="13" Foreground="#CCC" Margin="0,2,0,0" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- 操作按钮区 -->
+        <Border DockPanel.Dock="Bottom" Padding="16" CornerRadius="10"
+                BorderBrush="#E0E0E0" BorderThickness="1">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                <Button Content="🔄 刷新数据"
+                        Command="{Binding RefreshCommand}"
+                        Padding="14,8" CornerRadius="6"
+                        Cursor="Hand" />
+                <Button Grid.Column="1" Content="ℹ️ 关于"
+                        Command="{Binding ShowAboutCommand}"
+                        Margin="10,0,0,0"
+                        Padding="14,8" CornerRadius="6"
+                        Background="Transparent"
+                        BorderBrush="#CCC" BorderThickness="1"
+                        Cursor="Hand" />
+
+                <!-- 错误消息区域 -->
+                <Border Grid.Column="3" IsVisible="{Binding HasError}">
+                    <Border Padding="10,6" CornerRadius="6"
+                            Background="#FFEBEE" BorderBrush="#EF5350" BorderThickness="1">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="{Binding ErrorMessage}"
+                                       Foreground="#C62828" FontSize="13"
+                                       VerticalAlignment="Center" />
+                            <Button Grid.Column="1" Content="✕"
+                                    Command="{Binding DismissErrorCommand}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    FontSize="12"
+                                    Cursor="Hand" />
+                        </Grid>
+                    </Border>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- 欢迎信息区域 -->
+        <Border DockPanel.Dock="Bottom" Margin="0,16,0,0"
+                Padding="24" CornerRadius="10"
+                BorderBrush="#E0E0E0" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="欢迎使用物流上位机系统"
+                           FontSize="16" FontWeight="600" />
+                <TextBlock Text="当前处于 Phase 1 基础框架搭建阶段。系统正在逐步建设中，后续将添加设备通信、任务调度、实时监控等功能模块。"
+                           FontSize="13" Foreground="#666"
+                           TextWrapping="Wrap"
+                           Margin="0,8,0,0" />
+            </StackPanel>
+        </Border>
+
+    </DockPanel>
+</UserControl>

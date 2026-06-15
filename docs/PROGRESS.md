@@ -44,8 +44,8 @@
 ### 1.2 MVVM 架构搭建
 | ID | 任务 | 状态 | 完成时间 | 证据 |
 |----|------|------|----------|------|
-| 1.2 | 集成 CommunityToolkit.Mvvm、ViewModelBase 基类 | ⬜ | — | — |
-| 1.2a | 创建示例 View/ViewModel 对（如 HomeView）验证 MVVM | ⬜ | — | — |
+| 1.2 | 集成 CommunityToolkit.Mvvm、ViewModelBase 基类 | ✅ | 2026-06-15 | ViewModelBase.cs ([ObservableProperty]/[RelayCommand]) |
+| 1.2a | 创建示例 View/ViewModel 对（HomeView/HomeViewModel）验证 MVVM | ✅ | 2026-06-15 | HomeView.axaml + HomeViewModel.cs |
 
 ### 1.3 依赖注入容器
 | ID | 任务 | 状态 | 完成时间 | 证据 |
@@ -207,17 +207,17 @@
 | Phase | 总任务 | 已完成 | 进行中 | 待开始 | 完成率 |
 |-------|--------|--------|--------|--------|--------|
 | P0 规划 | 5 | 5 | 0 | 0 | **100%** |
-| P1 基础框架 | 12 | 3 | 0 | 9 | **25%** |
+| P1 基础框架 | 12 | 5 | 0 | 7 | **42%** |
 | P2 通信层 | 11 | 0 | 0 | 11 | **0%** |
 | P3 数据平台 | 7 | 0 | 0 | 7 | **0%** |
 | P4 核心业务 | 18 | 0 | 0 | 18 | **0%** |
 | P5 系统集成 | 5 | 0 | 0 | 5 | **0%** |
 | P6 增强功能 | 5 | 0 | 0 | 5 | **0%** |
 | P7 测试发布 | 9 | 0 | 0 | 9 | **0%** |
-| **合计** | **70** | **8** | **0** | **62** | **11.4%** |
+| **合计** | **70** | **10** | **0** | **60** | **14.3%** |
 
 > 注：P1 拆分子任务后总数为 70 项（原 64 项 + 1.1a 安装包 + 1.1b 编译验证 + 1.2a 示例对 + P0 规划 3 项）。
 
 ## 🔜 下一任务
 
-**Phase 1.2：MVVM 架构搭建** — 集成 CommunityToolkit.Mvvm 源码生成器，完善 ViewModelBase 基类，创建示例 View/ViewModel 对（HomeView/HomeViewModel）验证 MVVM 链路。
+**Phase 1.3：依赖注入容器** — 配置 Microsoft.Extensions.DependencyInjection，注册核心服务（日志、配置、导航、通信工厂），建立服务生命周期管理策略（Singleton/Transient），在 App.Host 中集成 DI 容器。
