@@ -22,6 +22,16 @@ internal static class Program
         {
             Log.Information("LogisticsHMI 启动中...");
 
+            // 构建 DI 容器
+            var services = new ServiceCollection();
+            services.AddLogisticsHmiServices();
+            var serviceProvider = services.BuildServiceProvider();
+
+            // 将 DI 容器注入 Avalonia App
+            App.UI.App.ServiceProvider = serviceProvider;
+
+            Log.Information("DI 容器已构建");
+
             // 构建并启动 Avalonia 应用
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
