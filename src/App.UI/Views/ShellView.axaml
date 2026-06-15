@@ -1,0 +1,150 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:App.UI.ViewModels"
+             xmlns:views="clr-namespace:App.UI.Views"
+             xmlns:services="clr-namespace:App.UI.Services"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
+             x:Class="App.UI.Views.ShellView"
+             x:DataType="viewmodels:ShellViewModel">
+
+    <!-- ViewModel 类型 → View 映射 -->
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="viewmodels:HomeViewModel">
+            <views:HomeView />
+        </DataTemplate>
+        <DataTemplate DataType="viewmodels:MonitorViewModel">
+            <views:MonitorView />
+        </DataTemplate>
+        <DataTemplate DataType="viewmodels:SettingsViewModel">
+            <views:SettingsView />
+        </DataTemplate>
+    </UserControl.DataTemplates>
+
+    <Grid ColumnDefinitions="220,*">
+        <!-- ═══════════════════════════════════════════════════════
+             左侧栏：Logo + 导航菜单 + 底部主题切换
+             ═══════════════════════════════════════════════════════ -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource BrushSidebar}">
+            <DockPanel Margin="0">
+                <!-- Logo/系统名称 -->
+                <Border DockPanel.Dock="Top"
+                        Padding="20,20,20,16"
+                        BorderBrush="{DynamicResource BrushBorderSubtle}"
+                        BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <TextBlock Text="🏭" FontSize="28" />
+                        <TextBlock Text="Logistics HMI"
+                                   FontSize="18" FontWeight="700"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   Margin="0,6,0,2" />
+                        <TextBlock Text="物流上位机系统"
+                                   FontSize="11" Foreground="{DynamicResource TextSecondary}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- 导航菜单列表 -->
+                <ListBox DockPanel.Dock="Top"
+                         ItemsSource="{Binding MenuItems}"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Margin="0,8,0,0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="services:SidebarItem">
+                            <Button Command="{Binding $parent[ListBox].DataContext.NavigateToCommand}"
+                                    CommandParameter="{Binding PageKey}"
+                                    Background="Transparent" BorderThickness="0"
+                                    HorizontalContentAlignment="Stretch"
+                                    Padding="16,12" Margin="8,2"
+                                    CornerRadius="8"
+                                    Cursor="Hand">
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <TextBlock Text="{Binding Icon}" FontSize="16"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Title}"
+                                               FontSize="14" FontWeight="500"
+                                               Foreground="{DynamicResource TextPrimary}"
+                                               VerticalAlignment="Center"
+                                               Margin="10,0,0,0" />
+                                </Grid>
+                                <Button.Styles>
+                                    <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                        <Setter Property="Background" Value="#20FFFFFF" />
+                                    </Style>
+                                </Button.Styles>
+                            </Button>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- 底部：主题切换 -->
+                <Border DockPanel.Dock="Bottom"
+                        Padding="16,12"
+                        BorderBrush="{DynamicResource BrushBorderSubtle}"
+                        BorderThickness="0,1,0,0">
+                    <Button Command="{Binding SwitchThemeCommand}"
+                            Padding="12,8" CornerRadius="8"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            Cursor="Hand"
+                            HorizontalContentAlignment="Stretch">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <TextBlock Text="🎨" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding CurrentThemeName}"
+                                       FontSize="12" Foreground="{DynamicResource TextSecondary}"
+                                       VerticalAlignment="Center" Margin="8,0,0,0" />
+                            <TextBlock Grid.Column="2" Text="切换"
+                                       FontSize="11" Foreground="{DynamicResource TextTertiary}" />
+                        </Grid>
+                    </Button>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <!-- ═══════════════════════════════════════════════════════
+             右侧区域：顶栏 + 面包屑 + 页面内容
+             ═══════════════════════════════════════════════════════ -->
+        <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
+
+            <!-- 顶栏：页面标题 + 返回按钮 -->
+            <Border Grid.Row="0" Padding="20,16,20,8">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Button IsVisible="{Binding CanGoBack}"
+                            Command="{Binding GoBackCommand}"
+                            Padding="8,4" CornerRadius="6"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            Cursor="Hand"
+                            ToolTip.Tip="返回上一页">
+                        <TextBlock Text="← 返回" FontSize="13"
+                                   Foreground="{DynamicResource TextSecondary}" />
+                    </Button>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding PageTitle}"
+                               FontSize="24" FontWeight="700"
+                               Foreground="{DynamicResource TextPrimary}"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0" />
+                </Grid>
+            </Border>
+
+            <!-- 面包屑导航（文本形式，无需 Converter） -->
+            <Border Grid.Row="1" Padding="20,0,20,12">
+                <TextBlock Text="{Binding BreadcrumbText}"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextSecondary}" />
+            </Border>
+
+            <!-- 页面内容区 -->
+            <Border Grid.Row="2" Padding="20,0,20,20">
+                <ContentControl Content="{Binding CurrentPage}"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch" />
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

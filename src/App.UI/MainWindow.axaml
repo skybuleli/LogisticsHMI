@@ -7,7 +7,8 @@
         x:Class="App.UI.MainWindow"
         Title="Logistics HMI — 物流上位机系统"
         Width="1280" Height="800"
-        MinWidth="1024" MinHeight="600">
-    <!-- 主页内容通过 DataContext 绑定到 HomeViewModel -->
-    <views:HomeView />
+        MinWidth="1024" MinHeight="600"
+        WindowState="Maximized">
+    <!-- Shell 布局：侧边栏 + 内容区，DataContext 绑定 ShellViewModel -->
+    <views:ShellView />
 </Window>

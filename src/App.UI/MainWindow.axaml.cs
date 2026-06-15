@@ -5,9 +5,9 @@ namespace App.UI;
 
 public partial class MainWindow : Window
 {
-    public MainWindow(HomeViewModel homeViewModel)
+    public MainWindow(ShellViewModel shellViewModel)
     {
         InitializeComponent();
-        DataContext = homeViewModel;
+        DataContext = shellViewModel;
     }
 }

@@ -20,14 +20,19 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<MainWindow>();
 
         // ── ViewModels ──────────────────────────────────────
+        services.AddTransient<ShellViewModel>();
         services.AddTransient<HomeViewModel>();
+        services.AddTransient<MonitorViewModel>();
+        services.AddTransient<SettingsViewModel>();
+
+        // ── 导航服务 ─────────────────────────────────────────
+        services.AddSingleton<INavigationService, NavigationService>();
 
         // ── UI 服务 ─────────────────────────────────────────
         services.AddSingleton<ThemeService>();
 
         // ── 基础设施服务（后续 Phase 启用）────────────────────
         // services.AddSingleton<IDeviceManager, DeviceManager>();
-        // services.AddSingleton<INavigationService, NavigationService>();
         // services.AddSingleton<IAlarmService, AlarmService>();
 
         return services;

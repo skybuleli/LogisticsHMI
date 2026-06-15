@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+             x:Class="App.UI.Views.SettingsView">
+    <Border Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Spacing="16" HorizontalAlignment="Center">
+            <TextBlock Text="⚙️" FontSize="64" HorizontalAlignment="Center" />
+            <TextBlock Text="系统设置"
+                       FontSize="28" FontWeight="700"
+                       Foreground="{DynamicResource TextPrimary}"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="通信参数配置、报警规则、用户权限管理"
+                       FontSize="14"
+                       Foreground="{DynamicResource TextSecondary}"
+                       HorizontalAlignment="Center"
+                       TextWrapping="Wrap" />
+            <Border Padding="16,10" CornerRadius="8"
+                    Background="{DynamicResource BrushPrimary}" Opacity="0.1"
+                    Margin="0,8,0,0">
+                <TextBlock Text="🚧 Phase 1.9 配置管理 — 待开发"
+                           FontSize="13"
+                           Foreground="{DynamicResource BrushPrimary}"
+                           HorizontalAlignment="Center" />
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>
