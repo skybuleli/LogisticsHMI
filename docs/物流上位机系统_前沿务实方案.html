@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物流上位机系统 · 前沿务实技术方案</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --outer-bg: #E4E1DC;
+  --page-bg: #FDFCF9;
+  --surface: #FFFFFF;
+  --border: #E8E6E2;
+  --divider: #C5C0BA;
+  --text-primary: #151515;
+  --text-body: #3D3D3D;
+  --text-secondary: #717171;
+  --hero-bg: #DDE3E8;
+  --hero-deco: #9BADB0;
+  --hero-deco2: #6E9298;
+  --success-bg: #E8FBCF; --success-fg: #3D4826;
+  --warning-bg: #FFF0DC; --warning-fg: #E47700;
+  --info-bg: #DEE5F7; --info-fg: #3E54CE;
+  --error-bg: #FDECEA; --error-fg: #C4433A;
+  --neutral-bg: #FDF9F2; --neutral-fg: #7C746F;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body {font-family:'Inter Tight',sans-serif;background:var(--outer-bg);color:var(--text-body);font-size:14px;line-height:1.6;min-height:100vh}
+.page {max-width:1200px;margin:0 auto;background:var(--page-bg);border-radius:0;overflow:hidden}
+@media(min-width:768px){body{padding:32px 20px}.page{border-radius:24px}}
+
+.hero{position:relative;background:var(--hero-bg);padding:48px 32px;overflow:hidden}
+.hero-blobs{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hero-blobs svg{position:absolute}
+.hero-content{position:relative;z-index:1}
+.hero-eyebrow{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:6px}
+.hero h1{font-family:'Noto Serif',serif;font-size:44px;font-weight:500;letter-spacing:-.02em;color:var(--text-primary);line-height:1.15}
+.hero-subtitle{font-size:15px;color:var(--text-secondary);margin-top:10px;max-width:660px}
+.hero-divider{border:none;border-top:1px solid rgba(110,146,152,.25);margin:22px 0}
+.hero-stats{display:flex;flex-wrap:wrap;gap:28px}
+.hero-stat-value{font-size:26px;font-weight:600;color:var(--text-primary)}
+.hero-stat-label{font-size:12px;color:var(--text-secondary);margin-top:2px}
+@media(max-width:767px){.hero{padding:36px 20px}.hero h1{font-size:28px}.hero-stats{gap:16px}.hero-stat-value{font-size:22px}}
+
+.section{padding:42px 32px}
+@media(max-width:767px){.section{padding:28px 20px}}
+.section-title{font-size:17px;font-weight:600;color:var(--text-primary);margin-bottom:4px}
+.section-subtitle{font-size:12px;color:var(--text-secondary);margin-bottom:20px}
+.section-rule{border:none;border-top:0.5px solid var(--border);margin-bottom:24px}
+
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:767px){.card-grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:22px 20px;transition:box-shadow .2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.card-title{font-size:15px;font-weight:600;color:var(--text-primary)}
+.card-body{font-size:13px;color:var(--text-body)}
+.card-body p{margin-bottom:8px}.card-body p:last-child{margin-bottom:0}
+
+.fw-card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:24px 20px;margin-bottom:12px}
+
+.pill{display:inline-block;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;margin:2px 4px 2px 0}
+.pill-blue{background:var(--info-bg);color:var(--info-fg)}
+.pill-green{background:var(--success-bg);color:var(--success-fg)}
+.pill-warn{background:var(--warning-bg);color:var(--warning-fg)}
+.pill-red{background:var(--error-bg);color:var(--error-fg)}
+.pill-neutral{background:var(--neutral-bg);color:var(--neutral-fg)}
+
+.alert{border-radius:10px;padding:14px 16px;margin:16px 0;font-size:13px}
+.alert-info{background:var(--info-bg);color:var(--info-fg)}
+.alert-warn{background:var(--warning-bg);color:var(--warning-fg)}
+.alert-success{background:var(--success-bg);color:var(--success-fg)}
+
+.table-wrap{overflow-x:auto;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{font-size:12px;font-weight:500;color:var(--text-secondary);text-align:left;padding:10px 14px;border-bottom:1px solid var(--divider)}
+tbody td{padding:10px 14px;border-bottom:0.5px solid var(--border)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#F8F9FC}
+
+.metric-row{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0}
+.metric-card{flex:1;min-width:140px;background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:16px}
+.metric-label{font-size:12px;color:var(--text-secondary)}
+.metric-value{font-size:26px;font-weight:600;color:var(--text-primary);margin:2px 0}
+.metric-delta{font-size:12px;font-weight:500}
+
+.tag-cloud{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.tag-item{display:inline-block;font-size:12px;font-weight:500;padding:5px 12px;border-radius:20px;background:var(--surface);border:0.5px solid var(--border);color:var(--text-body);transition:all .15s}
+.tag-item:hover{border-color:var(--hero-deco2);color:var(--text-primary)}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto}
+.tab-btn{padding:8px 16px;font-size:13px;font-weight:500;background:none;border:none;cursor:pointer;color:var(--text-secondary);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.tab-btn.active{color:var(--text-primary);border-bottom-color:var(--hero-deco2)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+.arch-layer{border:1px dashed var(--divider);border-radius:10px;padding:16px 20px;margin-bottom:10px;transition:background .2s}
+.arch-layer:hover{background:#F8F9FC}
+.arch-layer:last-child{margin-bottom:0}
+.arch-layer-title{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px}
+.arch-layer-desc{font-size:12px;color:var(--text-secondary)}
+.arch-connector{display:flex;align-items:center;justify-content:center;padding:4px 0;color:var(--text-secondary);font-size:14px}
+
+.roadmap{padding-left:24px;border-left:2px solid var(--hero-deco2)}
+.roadmap-step{margin-bottom:22px;position:relative}
+.roadmap-dot{position:absolute;left:-32px;top:0;width:16px;height:16px;border-radius:50%;background:var(--hero-deco2);border:3px solid var(--page-bg)}
+.roadmap-label{font-weight:600;font-size:14px;color:var(--text-primary)}
+.roadmap-desc{font-size:13px;color:var(--text-body);margin-top:4px}
+
+.vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+@media(max-width:767px){.vs-grid{grid-template-columns:1fr}}
+.vs-card{border-radius:10px;padding:16px}
+.vs-old{background:rgba(253,236,234,.3);border:0.5px solid rgba(196,67,58,.2)}
+.vs-new{background:rgba(232,251,207,.3);border:0.5px solid rgba(61,72,38,.2)}
+.vs-label{font-size:11px;font-weight:600;margin-bottom:6px}
+.vs-label.old{color:var(--error-fg)}.vs-label.new{color:var(--success-fg)}
+
+.maturity{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle}
+.maturity-stable{background:#E8FBCF;color:#3D4826}
+.maturity-experimental{background:#FFF0DC;color:#E47700}
+.maturity-future{background:#DEE5F7;color:#3E54CE}
+
+.knowledge-tree{list-style:none;padding:0}
+.knowledge-tree li{margin:3px 0;font-size:12px}
+.knowledge-tree .branch{font-weight:600;color:var(--text-primary);margin-top:10px;font-size:13px}
+.knowledge-tree .leaf{padding-left:16px;color:var(--text-body)}
+.knowledge-tree .leaf::before{content:'└ ';color:var(--divider);font-size:10px}
+
+.footer{background:var(--hero-bg);padding:36px 32px;font-size:12px;color:var(--text-secondary)}
+.footer-inner{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;margin-bottom:20px}
+.footer-brand{max-width:300px}
+.footer-brand-title{font-size:15px;font-weight:600;color:var(--text-primary)}
+.footer-links{display:flex;gap:48px;flex-wrap:wrap}
+.footer-col-title{font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:8px}
+.footer-col a{display:block;color:var(--text-secondary);text-decoration:none;margin-bottom:4px}
+.footer-col a:hover{color:var(--text-primary)}
+.footer-divider{border:none;border-top:1px solid rgba(110,146,152,.2);margin:16px 0}
+.footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+
+.progress-wrap{margin:8px 0}
+.progress-label-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:4px}
+.progress-track{height:6px;border-radius:3px;background:var(--border);overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .6s ease}
+
+.chart-wrap{position:relative;height:280px;margin:16px 0}
+
+.cmp-table td:first-child{font-weight:600;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ========== HERO ========== -->
+<div class="hero">
+  <div class="hero-blobs">
+    <svg style="top:10%;left:3%;width:180px;height:120px;opacity:0.13" viewBox="0 0 180 120"><path d="M15 10 Q90 -10 155 25 Q185 65 145 105 Q85 130 25 95 Q-10 55 15 10Z" fill="var(--hero-deco)"/></svg>
+    <svg style="top:50%;right:6%;width:190px;height:130px;opacity:0.11" viewBox="0 0 190 130"><ellipse cx="95" cy="65" rx="85" ry="55" fill="var(--hero-deco2)" transform="rotate(-8 95 65) skewX(10)"/></svg>
+    <svg style="bottom:5%;left:40%;width:150px;height:90px;opacity:0.14" viewBox="0 0 150 90"><path d="M10 15 Q70 -5 130 25 Q155 60 110 80 Q55 95 15 60 Q-5 35 10 15Z" fill="var(--hero-deco)"/></svg>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Industrial HMI · 前沿务实方案 · 2026</div>
+    <h1>物流上位机系统<br>技术方案蓝皮书</h1>
+    <p class="hero-subtitle">C# + Avalonia UI · .NET 10 驱动 · 生产就绪的技术栈 —— 在领先性与可落地性之间找到最优解</p>
+    <hr class="hero-divider">
+    <div class="hero-stats">
+      <div><div class="hero-stat-value">3</div><div class="hero-stat-label">系统分层架构</div></div>
+      <div><div class="hero-stat-value">6</div><div class="hero-stat-label">核心通信协议</div></div>
+      <div><div class="hero-stat-value">5</div><div class="hero-stat-label">典型部署场景</div></div>
+      <div><div class="hero-stat-value">50+</div><div class="hero-stat-label">关键技术知识点</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 1: 技术栈现状 ========== -->
+<div class="section">
+  <div class="section-title">技术栈现状：什么已经可用</div>
+  <div class="section-subtitle">基于 2026年6月 实际发布版本的技术选型，标注成熟度</div>
+  <hr class="section-rule">
+
+  <div class="fw-card">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>技术组件</th><th>当前版本</th><th>状态</th><th>对上位机的价值</th></tr></thead>
+        <tbody>
+          <tr><td><strong>.NET</strong></td><td>10.0 LTS (预览) / 9.0 (稳定)</td><td><span class="maturity maturity-stable">稳定</span></td><td>生产级运行时；NativeAOT 支持日益成熟；建议开发期用 .NET 9，发布期切 .NET 10</td></tr>
+          <tr><td><strong>Avalonia UI</strong></td><td>12.0.4 (2026年5月)</td><td><span class="maturity maturity-stable">稳定</span></td><td>复杂布局 FPS ↑1867%；Android 性能 ↑3x；Linux 原生无障碍；生产就绪</td></tr>
+          <tr><td><strong>Impeller 渲染器</strong></td><td>合作宣布，集成中</td><td><span class="maturity maturity-experimental">实验性</span></td><td>未来 GPU-first 渲染，目前不可用于生产；继续使用 Skia 即可</td></tr>
+          <tr><td><strong>SkiaSharp</strong></td><td>4.x (稳定，2026)</td><td><span class="maturity maturity-stable">稳定</span></td><td>2D 图形核心引擎；v4 新增 OpenType 可变字体、SKPathBuilder、mipmap 锐化、Metal/Vulkan GPU 后端，详见专题章节</td></tr>
+          <tr><td><strong>CommunityToolkit.Mvvm</strong></td><td>8.x (稳定)</td><td><span class="maturity maturity-stable">稳定</span></td><td>微软官方 MVVM 工具包，源码生成器减少样板代码</td></tr>
+          <tr><td><strong>FluentModbus / NModbus4</strong></td><td>稳定</td><td><span class="maturity maturity-stable">稳定</span></td><td>Modbus TCP/RTU 成熟方案，物流行业最普遍的设备通信协议</td></tr>
+          <tr><td><strong>OPC Foundation .NET SDK</strong></td><td>1.5.x (稳定)</td><td><span class="maturity maturity-stable">稳定</span></td><td>OPC UA 客户端/服务端，跨厂商互操作标准</td></tr>
+          <tr><td><strong>MQTTnet</strong></td><td>5.x (稳定)</td><td><span class="maturity maturity-stable">稳定</span></td><td>MQTT 3.1/5.0，IoT 消息推送、云边通信</td></tr>
+          <tr><td><strong>S7netplus</strong></td><td>稳定</td><td><span class="maturity maturity-stable">稳定</span></td><td>西门子 S7 系列 PLC 通信（国内工厂主流）</td></tr>
+          <tr><td><strong>LiveChartsCore</strong></td><td>2.x (稳定)</td><td><span class="maturity maturity-stable">稳定</span></td><td>实时图表，原生 MVVM 支持，增量更新</td></tr>
+          <tr><td><strong>Mediator 替代: Wolverine</strong></td><td>3.x (MIT)</td><td><span class="maturity maturity-stable">稳定</span></td><td>替代已收费的 MediatR 和 MassTransit；MIT 开源，源码生成器驱动，高性能事件总线</td></tr>
+          <tr><td><strong>Mediator 替代: Concordia</strong></td><td>1.x (MIT)</td><td><span class="maturity maturity-stable">稳定</span></td><td>轻量替代；C# Source Generator 编译时注册，API 与 MediatR 接近，迁移成本低</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>📌 关于 Impeller：</strong>Google Flutter 团队与 Avalonia 的合作已宣布，Impeller 的 .NET 集成目前处于<strong>实验阶段</strong>，尚未发布生产可用版本。当前生产环境继续使用 <strong>Skia 渲染后端</strong>，性能已经足够优秀。Impeller 是未来方向，等待正式发布后可平滑升级。<br><br>
+    <strong>📌 关于 MediatR 和 MassTransit：</strong>两者均已转向商业许可（开源项目仍免费）。对于上位机项目，推荐用 <strong>Wolverine</strong>（功能最强、MIT 许可）或 <strong>Concordia</strong>（最轻量、API 与 MediatR 最接近）。简单场景下甚至不需要 Mediator——在应用层直接注入并调用服务即可。
+  </div>
+</div>
+
+<!-- ========== 2: SkiaSharp 4.x 专题 ========== -->
+<div class="section">
+  <div class="section-title">SkiaSharp 4.x：2D 绘图能力质的飞跃</div>
+  <div class="section-subtitle">v4 版本引入了大量对工业上位机直接可用的新特性——无需依赖任何外部绘图工具</div>
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:#DEE5F7;">🔤</div><div class="card-title">OpenType 可变字体</div></div>
+      <div class="card-body">
+        <p>SkiaSharp 4 + HarfBuzzSharp 完整支持 <strong>OpenType Variable Font</strong>。可在运行时通过轴参数（weight/width/slant/optical size）连续调节字体形态，而不是只能选择固定的 Bold/Light。</p>
+        <p><strong>上位机用途：</strong>设备编号标签自动缩放到合适粗细；状态文字从"正常"的纤细到"紧急报警"的粗重，仅用一套字体即可动态变化。</p>
+        <span class="pill pill-green">可变字体</span><span class="pill pill-blue">HarfBuzzSharp</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:#D7EDE2;">🎨</div><div class="card-title">色彩字体调色板 (CPAL)</div></div>
+      <div class="card-body">
+        <p>支持 OpenType CPAL 调色板——可在运行时<strong>切换彩色字体的配色方案</strong>，甚至覆盖单个字形的颜色。</p>
+        <p><strong>上位机用途：</strong>用彩色图标字体（如 Material Symbols / Noto Color Emoji）直接渲染设备状态指示灯——绿色运行、黄色待机、红色故障，一套字体解决所有状态图标。不再需要分别准备多套 PNG/SVG 图标。</p>
+        <span class="pill pill-green">彩色图标字体</span><span class="pill pill-warn">状态指示灯</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:#EDE8DE;">🖼️</div><div class="card-title">图像处理增强</div></div>
+      <div class="card-body">
+        <p>• <strong>mipmap 锐化默认开启</strong>：缩略图、小图标自动更清晰锐利</p>
+        <p>• <strong>Exif 自动旋转</strong>：图像编解码器自动识别并修正照片方向</p>
+        <p>• <strong>色彩准确性提升</strong>：Rec.709 / HLG / PQ 传递函数修正，颜色更精准</p>
+        <p><strong>上位机用途：</strong>库区缩略图更清晰；相机拍照的设备巡检图自动正确方向；仪表盘颜色显示更准确。</p>
+        <span class="pill pill-green">自动锐化</span><span class="pill pill-green">Exif</span><span class="pill pill-green">色彩精准</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:#F0E4E1;">🔧</div><div class="card-title">SKPathBuilder + 不可变路径</div></div>
+      <div class="card-body">
+        <p><strong>SKPathBuilder</strong> 是全新的路径构建 API，更符合现代 .NET 习惯。底层 SKPath 变为<strong>不可变</strong>——线程安全、可缓存复用。</p>
+        <p><strong>上位机用途：</strong>设备外形轮廓（堆垛机、AGV 车体、输送线箭头）用 SKPathBuilder 构建后缓存为不可变路径，多线程渲染时安全共享，性能大幅提升。一台设备只需构建一次，之后所有视图复用。</p>
+        <span class="pill pill-red">线程安全</span><span class="pill pill-green">路径缓存</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:#DDE8D8;">⚡</div><div class="card-title">GPU 后端：Metal / Vulkan</div></div>
+      <div class="card-body">
+        <p>SkiaSharp 4 继续增强 GPU 后端支持：<strong>OpenGL / Metal (macOS) / Vulkan (Linux/Windows)</strong>。超大位图自动分片适配 GPU 纹理上限。</p>
+        <p><strong>上位机用途：</strong>Mac 上通过 Metal 后端获得最佳渲染性能；复杂库区布局（数千个货位）使用 GPU 渲染流畅无卡顿；Vulkan 后端在 Linux 工控机上提供硬件加速。</p>
+        <span class="pill pill-green">Metal</span><span class="pill pill-green">Vulkan</span><span class="pill pill-green">自动分片</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:#E8DDEF;">🔒</div><div class="card-title">安全加固 + 性能提升</div></div>
+      <div class="card-body">
+        <p>• <strong>现代编译器安全缓解</strong>：全平台启用最新编译器安全特性</p>
+        <p>• <strong>Noise Shader 优化</strong>：噪声着色器性能显著提升</p>
+        <p>• <strong>Canvas 操作增量优化</strong>：28 个里程碑的上游 Skia 引擎升级</p>
+        <p>• <strong>Uno Platform 加入维护</strong>：微软 .NET 团队与 Uno Platform 共同维护，项目发展加速</p>
+        <span class="pill pill-green">安全加固</span><span class="pill pill-neutral">性能提升</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-success" style="margin-top:14px;">
+    <strong>💡 核心结论：</strong>SkiaSharp 4.x 让 Avalonia 的 2D 自定义绘制能力大幅增强。对于上位机系统，<strong>设备状态图标、库区缩略图、路径动画、色彩字体状态指示、GPU 硬件加速渲染</strong>都可以直接用 SkiaSharp 实现，不需要引入任何外部绘图工具或第三方图标库。一套 NuGet 包覆盖全部 2D 需求。
+  </div>
+</div>
+
+<!-- ========== 3: MediatR 替代方案 ========== -->
+<div class="section">
+  <div class="section-title">事件驱动架构：MediatR 免费替代方案</div>
+  <div class="section-subtitle">MediatR v12+ 和 MassTransit v9+ 已转向商业许可——这些 MIT 开源替代品可以直接替换</div>
+  <hr class="section-rule">
+
+  <div class="fw-card">
+    <div class="table-wrap cmp-table">
+      <table>
+        <thead><tr><th>库</th><th>许可</th><th>特性</th><th>适用场景</th><th>推荐度</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Wolverine</td>
+            <td><span class="pill pill-green">MIT</span></td>
+            <td>全能型：Mediator + 消息总线 + 后台任务 + Saga + Outbox；源码生成器驱动；支持多种传输（RabbitMQ/Kafka/Azure）；重试/调度/死信队列</td>
+            <td>需要完整事件驱动架构的中大型项目</td>
+            <td><span class="pill pill-green">🏆 首选</span></td>
+          </tr>
+          <tr>
+            <td>Concordia</td>
+            <td><span class="pill pill-green">MIT</span></td>
+            <td>轻量级：C# Source Generator 编译时注册；API 几乎与 MediatR 相同；支持 Request/Response + Pub/Sub；极高性能</td>
+            <td>从 MediatR 迁移、轻量事件驱动</td>
+            <td><span class="pill pill-green">推荐</span></td>
+          </tr>
+          <tr>
+            <td>ModernMediator</td>
+            <td><span class="pill pill-green">MIT</span></td>
+            <td>MediatR 风格 + Pub/Sub；NativeAOT 友好；内置 UI 调度器（Avalonia/WPF/WinForms）；弱引用订阅</td>
+            <td>桌面应用内的 MVP 模式通信</td>
+            <td><span class="pill pill-blue">可选</span></td>
+          </tr>
+          <tr>
+            <td>ConduitR</td>
+            <td><span class="pill pill-green">MIT</span></td>
+            <td>轻量 Mediator；热路径缓存 + 最小分配；内置验证、ASP.NET、弹性策略扩展</td>
+            <td>Web API 项目中的 CQRS</td>
+            <td><span class="pill pill-blue">可选</span></td>
+          </tr>
+          <tr><td colspan="5" style="text-align:center;color:var(--text-secondary);font-size:12px;">以上全部 <strong>MIT 许可，永久免费</strong>，可用于商业闭源项目</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-grid" style="margin-top:14px;">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:#DDE3E8;">🔄</div><div class="card-title">推荐：Wolverine（进程内事件）</div></div>
+      <div class="card-body">
+        <p>对上位机最合适。不仅替代 MediatR 的进程内消息分发，还内置了<strong>本地队列、重试策略、计划任务、死信处理</strong>——非常适合工业场景中"发送指令→等待确认→超时重试→记录失败"这类可靠性要求高的通信模式。</p>
+        <p style="margin-top:6px;"><code>dotnet add package WolverineFx</code></p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:#DDE3E8;">⚡</div><div class="card-title">轻量替代：直接注入 + Channels</div></div>
+      <div class="card-body">
+        <p>如果团队不想引入任何 Mediator 库，上位机完全可以用更简单的方式实现事件驱动：</p>
+        <p>• <strong>C# event / Action 委托</strong> — 最简单的事件通知</p>
+        <p>• <strong>System.Threading.Channels</strong> — 高性能异步事件管道</p>
+        <p>• <strong>直接 DI 注入服务</strong> — 调用应用层服务即可</p>
+        <p style="margin-top:6px;">上位机是单体桌面应用，不一定需要 Mediator 模式。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>📌 务实建议：</strong>对于上位机这种单体桌面应用，<strong>最简单的方案往往最好</strong>。起步阶段直接用 DI 注入服务 + C# event。当模块间通信变得复杂（如报警模块需要同时通知 UI、日志、短信三个消费者），再引入 Wolverine。这样既避免了过度设计，又保留了升级路径。
+  </div>
+</div>
+
+<!-- ========== 4: 系统架构 ========== -->
+<div class="section">
+  <div class="section-title">系统架构总览</div>
+  <div class="section-subtitle">WMS → WCS上位机 → PLC/设备 三层架构</div>
+  <hr class="section-rule">
+
+  <div class="arch-layer" style="border-color:#6E9298;background:rgba(221,227,232,0.3);">
+    <div class="arch-layer-title" style="color:#3E54CE;">▌ 管理层 — WMS / ERP / OMS</div>
+    <div class="arch-layer-desc"><strong>WMS 仓库管理系统：</strong>入库、出库、库存、库位、批次/效期、盘点、条码/RFID、多仓协同、报表<br><strong>对接系统：</strong>ERP 企业资源计划、OMS 订单管理、TMS 运输管理</div>
+  </div>
+  <div class="arch-connector">⬇ &nbsp; 任务指令下发 · 执行状态反馈 &nbsp; ⬇</div>
+  <div class="arch-layer" style="border-color:#5FA882;background:rgba(215,237,226,0.35);">
+    <div class="arch-layer-title" style="color:#3D4826;">▌ 控制层 — WCS 上位机系统（你的产品定位）</div>
+    <div class="arch-layer-desc"><strong>核心职责：</strong>设备调度与控制、路径规划、实时监控、报警管理、数据采集、报表分析<br><strong>对外接口：</strong>REST API / WebSocket / 数据库直连 / 消息队列</div>
+  </div>
+  <div class="arch-connector">⬇ &nbsp; 工业协议通信 · 状态采集 &nbsp; ⬇</div>
+  <div class="arch-layer" style="border-color:#D4A882;background:rgba(240,228,216,0.3);">
+    <div class="arch-layer-title" style="color:#B87D50;">▌ 执行层 — PLC / SCADA / 现场设备</div>
+    <div class="arch-layer-desc"><strong>设备层：</strong>PLC 控制器、堆垛机、穿梭车、AGV/AMR、输送机、提升机、分拣机、机器人、传感器、条码/RFID 读写器<br><strong>通信协议：</strong>Modbus TCP/RTU、OPC UA、S7、EtherNet/IP、MQTT、Socket</div>
+  </div>
+</div>
+
+<!-- ========== 5: 核心功能模块 ========== -->
+<div class="section">
+  <div class="section-title">核心功能模块</div>
+  <div class="section-subtitle">一套完整的物流上位机系统必须具备的功能清单</div>
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DEE5F7;">📋</div><div class="card-title">任务调度引擎</div></div><div class="card-body"><p>接收 WMS 下发的出/入库任务，进行<strong>任务拆分、优先级排序、设备分配</strong>。支持波次策略、路径规划（A*/Dijkstra）、多设备协同调度、死锁检测与解除。</p><span class="pill pill-blue">任务编排</span><span class="pill pill-blue">路径优化</span><span class="pill pill-blue">死锁处理</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#D7EDE2;">📡</div><div class="card-title">设备通信网关</div></div><div class="card-body"><p>统一的<strong>多协议通信中间件</strong>，支持 Modbus TCP/RTU、OPC UA、S7、EtherNet/IP、MQTT、Socket。统一的驱动抽象接口，各协议作为插件实现，支持运行时热加载。</p><span class="pill pill-green">多协议</span><span class="pill pill-green">插件化</span><span class="pill pill-green">热加载</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#EDE8DE;">🖥️</div><div class="card-title">实时监控看板</div></div><div class="card-body"><p><strong>2D 可视化仪表盘</strong>（SkiaSharp 4.x 驱动），实时展示设备运行状态、任务进度、库位占用。支持设备状态动画、实时数据曲线、库区热力图、异常高亮、自定义布局。</p><span class="pill pill-warn">实时曲线</span><span class="pill pill-warn">热力图</span><span class="pill pill-warn">SkiaSharp</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#F0E4E1;">🔔</div><div class="card-title">报警管理系统</div></div><div class="card-body"><p>多级报警策略，支持<strong>声光报警、短信/邮件/钉钉/微信通知、报警确认与处理流程</strong>、报警抑制（防风暴）、报警升级、历史统计与趋势分析。</p><span class="pill pill-red">多级报警</span><span class="pill pill-red">通知推送</span><span class="pill pill-red">报警抑制</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE8D8;">📊</div><div class="card-title">数据采集与存储</div></div><div class="card-body"><p><strong>实时数据采集管道</strong>，时序数据库（TDengine/InfluxDB）存储设备运行数据，关系数据库（PostgreSQL/SQL Server）存储业务数据。数据断点续传、本地缓存。</p><span class="pill pill-green">时序数据库</span><span class="pill pill-green">断点续传</span><span class="pill pill-green">本地缓存</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#E8DDEF;">🔐</div><div class="card-title">用户与权限管理</div></div><div class="card-body"><p><strong>RBAC 角色权限模型</strong>，支持操作员、工程师、管理员等多角色。操作日志审计、登录认证（可集成 AD 域/LDAP）、操作二次确认、超时自动锁屏。</p><span class="pill pill-neutral">RBAC</span><span class="pill pill-neutral">审计追踪</span><span class="pill pill-neutral">自动锁屏</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#F0E4D8;">📑</div><div class="card-title">报表与分析</div></div><div class="card-body"><p>支持<strong>自定义报表模板</strong>，自动生成日报/周报/月报。涵盖设备稼动率、出入库效率、故障统计、能耗分析等。支持导出 Excel/PDF，定时邮件分发。</p><span class="pill pill-warn">自定义模板</span><span class="pill pill-warn">Excel/PDF</span><span class="pill pill-warn">定时分发</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#E2E8E8;">🔄</div><div class="card-title">系统集成接口</div></div><div class="card-body"><p>提供 <strong>REST API、WebSocket、数据库视图</strong> 等标准接口。支持 Web 端远程监控（ASP.NET Core 后端 + Avalonia Web 或 Blazor 前端）。</p><span class="pill pill-blue">REST API</span><span class="pill pill-blue">WebSocket</span><span class="pill pill-blue">Web远程</span></div></div>
+  </div>
+</div>
+
+<!-- ========== 6: 工业通信协议 ========== -->
+<div class="section">
+  <div class="section-title">工业通信协议全景</div>
+  <div class="section-subtitle">上位机系统需要支持的核心工业协议</div>
+  <hr class="section-rule">
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>协议</th><th>类型</th><th>传输层</th><th>国内工厂使用度</th><th>.NET 推荐库</th><th>优先级</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Modbus TCP/RTU</strong></td><td>开放标准</td><td>TCP / 串口</td><td>⭐⭐⭐⭐⭐ 最普遍</td><td>FluentModbus / NModbus4</td><td><span class="pill pill-red">必备</span></td></tr>
+        <tr><td><strong>Siemens S7</strong></td><td>私有协议</td><td>TCP</td><td>⭐⭐⭐⭐⭐ 西门子统治</td><td>S7netplus</td><td><span class="pill pill-red">必备</span></td></tr>
+        <tr><td><strong>OPC UA</strong></td><td>开放标准</td><td>TCP / HTTPS</td><td>⭐⭐⭐⭐ 快速普及</td><td>OPCFoundation.NetStandard</td><td><span class="pill pill-red">必备</span></td></tr>
+        <tr><td><strong>MQTT</strong></td><td>开放标准</td><td>TCP</td><td>⭐⭐⭐⭐ IoT 标配</td><td>MQTTnet</td><td><span class="pill pill-warn">强烈推荐</span></td></tr>
+        <tr><td><strong>EtherNet/IP</strong></td><td>开放标准</td><td>TCP/UDP</td><td>⭐⭐⭐ 罗克韦尔/AB</td><td>libplctag.NET</td><td><span class="pill pill-blue">重要</span></td></tr>
+        <tr><td><strong>HTTP / WebSocket</strong></td><td>通用标准</td><td>TCP</td><td>⭐⭐⭐⭐⭐</td><td>ASP.NET Core 内置</td><td><span class="pill pill-red">必备</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========== 7: 部署场景 ========== -->
+<div class="section">
+  <div class="section-title">典型部署场景</div>
+  <div class="section-subtitle">上位机系统在不同物流场景中的应用模式</div>
+  <hr class="section-rule">
+
+  <div class="tabs" id="sceneTabs">
+    <button class="tab-btn active" data-tab="scene1">🏭 自动化立体仓库</button>
+    <button class="tab-btn" data-tab="scene2">🤖 AGV 调度</button>
+    <button class="tab-btn" data-tab="scene3">📦 分拣系统</button>
+    <button class="tab-btn" data-tab="scene4">🏗️ 工厂产线</button>
+    <button class="tab-btn" data-tab="scene5">🌐 物流中心</button>
+  </div>
+
+  <div class="tab-panel active" id="scene1">
+    <div class="fw-card"><div class="card-header"><div class="card-icon" style="background:#D7EDE2;">🏭</div><div class="card-title">自动化立体仓库 (AS/RS)</div></div><div class="card-body"><p><strong>核心设备：</strong>堆垛机、穿梭车、输送系统、提升机</p><p><strong>上位机职责：</strong>货位实时追踪 · 货位分配策略（ABC分类/就近原则）· 存取任务序列优化 · 协同调度 · 库区 2D 可视化</p><div class="metric-row"><div class="metric-card"><div class="metric-label">典型出入库效率</div><div class="metric-value">50~200</div><div class="metric-delta">托盘/小时</div></div><div class="metric-card"><div class="metric-label">库容利用率目标</div><div class="metric-value">85~95%</div><div class="metric-delta">vs 平面仓 60%</div></div></div></div></div>
+  </div>
+  <div class="tab-panel" id="scene2"><div class="fw-card"><div class="card-header"><div class="card-icon" style="background:#EDE8DE;">🤖</div><div class="card-title">AGV / AMR 车队调度</div></div><div class="card-body"><p><strong>核心：</strong>任务分配 · A* 路径规划 · 交通管制（锁区/锁段/锁点）· 电量管理自动充电 · 多品牌混合调度</p></div></div></div>
+  <div class="tab-panel" id="scene3"><div class="fw-card"><div class="card-header"><div class="card-icon" style="background:#F0E4E1;">📦</div><div class="card-title">自动分拣系统</div></div><div class="card-body"><p><strong>核心：</strong>读码器/视觉识别集成 · 分拣目的地查询与格口分配 · 高速实时控制 · 分拣统计与异常追踪</p></div></div></div>
+  <div class="tab-panel" id="scene4"><div class="fw-card"><div class="card-header"><div class="card-icon" style="background:#DDE8D8;">🏗️</div><div class="card-title">工厂产线监控</div></div><div class="card-body"><p><strong>核心：</strong>SCADA 级实时数据采集 · OEE 设备综合效率 · 配方管理 · Andon 安灯系统 · MES 对接</p></div></div></div>
+  <div class="tab-panel" id="scene5"><div class="fw-card"><div class="card-header"><div class="card-icon" style="background:#E2E8E8;">🌐</div><div class="card-title">大型物流中心</div></div><div class="card-body"><p><strong>核心：</strong>全场景集成（立库+AGV+分拣+输送+包装+码垛）· 物料全流程追踪 · 多级部署 · 断网离线运行</p></div></div></div>
+</div>
+
+<!-- ========== 8: 数据架构 ========== -->
+<div class="section">
+  <div class="section-title">数据架构设计</div>
+  <div class="section-subtitle">关系数据库 + 时序数据库 + 缓存 + 事件流——各司其职</div>
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">🗄️ PostgreSQL / SQL Server</div><div class="card-body"><p><strong>用途：</strong>业务数据主库</p><p>• 用户权限、角色、部门</p><p>• 任务记录、操作日志</p><p>• 设备配置、仓库布局</p><p>• 报警规则、报表定义</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">⏱️ TDengine / InfluxDB</div><div class="card-body"><p><strong>用途：</strong>时序数据存储</p><p>• 设备运行状态（每秒/分钟级）</p><p>• 传感器数据（温度/振动/电流）</p><p>• 任务执行时序记录</p><p>• 压缩率高（10~20x）</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">⚡ Redis</div><div class="card-body"><p><strong>用途：</strong>实时缓存与状态管理</p><p>• 设备实时状态快照</p><p>• 库位实时占用状态</p><p>• 分布式锁（任务冲突检测）</p><p>• Pub/Sub 消息通知</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">📨 RabbitMQ / Kafka</div><div class="card-body"><p><strong>用途：</strong>事件总线与异步解耦</p><p>• 设备状态变更事件</p><p>• 报警事件分发</p><p>• 任务状态流转</p><p>• 操作审计事件</p></div></div>
+  </div>
+
+  <div class="alert alert-success" style="margin-top:14px;"><strong>💡 务实建议：</strong>起步阶段用 <strong>PostgreSQL + Redis</strong> 即可。设备数据量上来后再引入 TDengine/InfluxDB。跨进程消息用 RabbitMQ，如果用的是 Wolverine 则自带传输抽象。</div>
+</div>
+
+<!-- ========== 9: 现代架构设计 ========== -->
+<div class="section">
+  <div class="section-title">现代架构设计</div>
+  <div class="section-subtitle">分层 + 插件化 + 事件驱动（使用免费开源库）</div>
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE3E8;">🧱</div><div class="card-title">分层架构</div></div><div class="card-body"><p><strong>表示层：</strong>Avalonia UI（Views + ViewModels）</p><p><strong>应用层：</strong>业务服务编排、DTO 映射</p><p><strong>领域层：</strong>设备模型、调度算法、业务规则</p><p><strong>基础设施层：</strong>通信驱动、数据访问、日志</p></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE3E8;">🔌</div><div class="card-title">插件化架构</div></div><div class="card-body"><p>• <strong>IDeviceDriver</strong> — 通信协议插件</p><p>• <strong>IDeviceModel</strong> — 设备类型插件</p><p>• <strong>IAlarmChannel</strong> — 报警通知渠道插件</p><p>• <strong>IReportTemplate</strong> — 报表模板插件</p></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE3E8;">⚡</div><div class="card-title">MVVM + 响应式</div></div><div class="card-body"><p><strong>CommunityToolkit.Mvvm</strong> 作 MVVM 基础。设备状态变化通过 INotifyPropertyChanged 驱动 UI。高频数据用 <strong>Rx.NET Throttle/Buffer</strong> 降噪。</p></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE3E8;">🔄</div><div class="card-title">事件驱动</div></div><div class="card-body"><p>设备状态变更、报警触发、任务完成等发布<strong>领域事件</strong>，各模块独立订阅。</p><p>进程内首选 <strong>Wolverine</strong>（MIT）或直接用 C# event；跨进程用 RabbitMQ/Kafka。</p></div></div>
+  </div>
+</div>
+
+<!-- ========== 10: 性能优化 ========== -->
+<div class="section">
+  <div class="section-title">性能优化策略</div>
+  <div class="section-subtitle">利用现代 .NET 特性让上位机跑得更快、占用更少</div>
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">内存优化</div><div class="card-body"><p>• <strong>Span&lt;T&gt; / Memory&lt;T&gt;</strong>：零分配解析 Modbus 帧</p><p>• <strong>ArrayPool&lt;T&gt;</strong>：复用大缓冲区</p><p>• <strong>stackalloc</strong>：栈上分配小数组</p><p>• 对象池复用高频对象</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">并发优化</div><div class="card-body"><p>• <strong>System.Threading.Channels</strong>：生产者-消费者管道</p><p>• <strong>IAsyncEnumerable</strong>：流式处理大数据集</p><p>• <strong>ValueTask</strong>：减少异步状态机分配</p><p>• SemaphoreSlim 并发限流</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">启动优化</div><div class="card-body"><p>• <strong>NativeAOT</strong>：编译为本机代码，冷启动 &lt;2s</p><p>• <strong>ReadyToRun</strong>：预编译 IL</p><p>• <strong>Trimming</strong>：裁剪未使用代码</p><p>• 延迟初始化按需加载</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">渲染优化</div><div class="card-body"><p>• <strong>SkiaSharp 4.x</strong>：SKPathBuilder 缓存不可变路径，线程安全复用</p><p>• GPU 后端（Metal/Vulkan）硬件加速</p><p>• 虚拟化列表 + 增量更新</p></div></div>
+  </div>
+</div>
+
+<!-- ========== 11: AI 务实应用 ========== -->
+<div class="section">
+  <div class="section-title">AI 务实应用（可选增强）</div>
+  <div class="section-subtitle">不做空中楼阁——只推荐工厂真正能用得上的</div>
+  <hr class="section-rule">
+
+  <div class="alert alert-warn"><strong>⚠️ 务实定位：</strong>AI 是"锦上添花"而非"雪中送炭"。以下功能均为<strong>可选增强模块</strong>，核心系统不依赖 AI 也能完整运行。</div>
+
+  <div class="card-grid">
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE3E8;">📊</div><div class="card-title">设备健康评估</div></div><div class="card-body"><p>基于<strong>规则引擎</strong>：设定参数正常区间，超限自动预警。实现简单、可配置。</p><span class="pill pill-green">规则引擎</span><span class="pill pill-neutral">可配置</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE3E8;">📈</div><div class="card-title">趋势预测</div></div><div class="card-body"><p>基于<strong>统计方法</strong>（移动平均、指数平滑、线性回归），纯数学计算，无需 GPU。</p><span class="pill pill-green">统计方法</span><span class="pill pill-neutral">轻量级</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE3E8;">🔍</div><div class="card-title">异常检测（可选）</div></div><div class="card-body"><p>积累 3~6 个月数据后，可引入轻量模型（Isolation Forest），通过 ONNX Runtime 本地推理。</p><span class="pill pill-blue">ONNX Runtime</span><span class="pill pill-warn">需数据积累</span></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon" style="background:#DDE3E8;">🎯</div><div class="card-title">调度参数自优化</div></div><div class="card-body"><p>基于历史数据统计分析，定期自动调整调度参数。数据驱动，可解释。</p><span class="pill pill-green">数据驱动</span><span class="pill pill-neutral">可解释</span></div></div>
+  </div>
+
+  <div class="alert alert-info"><strong>📌 AI 演进路径：</strong>规则引擎（第1月）→ 统计趋势分析（第3月）→ 积累数据后（第6~12月）→ ONNX Runtime 轻量模型。不要一上来就搞深度学习。</div>
+</div>
+
+<!-- ========== 12: 安全体系 ========== -->
+<div class="section">
+  <div class="section-title">安全体系</div>
+  <div class="section-subtitle">工业上位机不可忽视的安全防线</div>
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">🛡️ 网络安全</div><div class="card-body"><p>• OPC UA 安全策略（Basic256Sha256）</p><p>• TLS 1.3 加密通信</p><p>• 证书双向认证</p><p>• VPN 远程接入</p><p>• 防火墙 + VLAN 隔离</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">🔐 应用安全</div><div class="card-body"><p>• RBAC 角色权限模型</p><p>• 操作二次确认</p><p>• 超时自动锁屏</p><p>• 审计日志</p><p>• 敏感配置加密存储</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">📋 开发安全</div><div class="card-body"><p>• NuGet 包漏洞扫描</p><p>• 静态代码分析</p><p>• SQL 注入防护（EF Core 参数化）</p><p>• 输入校验（协议数据边界检查）</p></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">📜 合规参考</div><div class="card-body"><p>• <strong>IEC 62443</strong> — 工业控制安全标准</p><p>• <strong>等保 2.0</strong> — 中国网络安全等级保护</p><p>• 操作日志至少保留 6 个月</p></div></div>
+  </div>
+</div>
+
+<!-- ========== 13: 知识体系全景图 ========== -->
+<div class="section">
+  <div class="section-title">知识体系全景图</div>
+  <div class="section-subtitle">开发一套物流上位机系统需要掌握的全部知识点</div>
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">💻 C# 与 .NET</div><ul class="knowledge-tree"><li class="branch">C# 12/13 语言特性</li><li class="leaf">async/await 异步编程</li><li class="leaf">LINQ / Span&lt;T&gt; / Memory&lt;T&gt;</li><li class="leaf">System.Threading.Channels</li><li class="leaf">依赖注入 (Microsoft.Extensions.DI)</li><li class="leaf">配置系统 (Options Pattern)</li><li class="leaf">日志 (Serilog)</li><li class="leaf">单元测试 (xUnit + Moq)</li></ul></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">🎨 Avalonia + SkiaSharp</div><ul class="knowledge-tree"><li class="branch">UI 框架</li><li class="leaf">XAML / 样式 / 控件主题</li><li class="leaf">MVVM (CommunityToolkit.Mvvm)</li><li class="leaf">数据绑定与转换器</li><li class="leaf">自定义控件开发</li><li class="leaf">动画系统</li><li class="branch">SkiaSharp 4.x 2D 绘制</li><li class="leaf">SKPathBuilder 不可变路径</li><li class="leaf">可变字体 / 色彩字体 (CPAL)</li><li class="leaf">GPU 后端 (Metal/Vulkan)</li><li class="leaf">LiveChartsCore 实时图表</li></ul></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">📡 工业通信</div><ul class="knowledge-tree"><li class="branch">协议实现</li><li class="leaf">Modbus 协议帧结构与功能码</li><li class="leaf">OPC UA 客户端/服务端</li><li class="leaf">Siemens S7 通信</li><li class="leaf">MQTT 主题设计与 QoS</li><li class="leaf">Socket 编程 (TCP/UDP)</li><li class="branch">设计</li><li class="leaf">驱动抽象层设计</li><li class="leaf">连接池 / 心跳 / 重连</li></ul></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">🗄️ 数据与存储</div><ul class="knowledge-tree"><li class="branch">数据库</li><li class="leaf">PostgreSQL / SQL Server</li><li class="leaf">Entity Framework Core</li><li class="leaf">时序数据库 (TDengine/InfluxDB)</li><li class="leaf">Redis 缓存与分布式锁</li><li class="branch">数据处理</li><li class="leaf">Excel 导入导出</li><li class="leaf">报表引擎设计</li></ul></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">📦 物流业务</div><ul class="knowledge-tree"><li class="branch">仓储管理</li><li class="leaf">WMS/WCS 分层架构</li><li class="leaf">入库/出库/盘点流程</li><li class="leaf">货位分配 (ABC/就近)</li><li class="branch">调度算法</li><li class="leaf">A* / Dijkstra 路径规划</li><li class="leaf">设备状态机建模</li><li class="leaf">交通管制 (锁区/锁段)</li></ul></div>
+    <div class="card"><div class="card-title" style="margin-bottom:8px;">🏗️ 软件工程</div><ul class="knowledge-tree"><li class="branch">架构</li><li class="leaf">分层架构 / 插件化架构</li><li class="leaf">事件驱动 (Wolverine MIT / Channels)</li><li class="leaf">CQRS 读写分离（可选）</li><li class="branch">运维</li><li class="leaf">Docker 容器化</li><li class="leaf">CI/CD (GitHub Actions)</li><li class="leaf">性能分析 (dotnet-trace)</li></ul></div>
+  </div>
+</div>
+
+<!-- ========== 14: 详细开发路线图 ========== -->
+<div class="section">
+  <div class="section-title">详细开发路线图</div>
+  <div class="section-subtitle">每个阶段的具体任务、验收标准和交付物</div>
+  <hr class="section-rule">
+
+  <!-- Phase 1 -->
+  <div class="fw-card" style="border-left:3px solid #6E9298;margin-bottom:20px;">
+    <div class="card-header">
+      <div class="card-icon" style="background:#DDE3E8;">1</div>
+      <div class="card-title">Phase 1：基础框架搭建 — 把骨架立起来</div>
+      <span class="pill pill-neutral">2~3 周</span>
+    </div>
+    <div class="card-body">
+      <div class="tag-cloud" style="margin-bottom:12px;">
+        <span class="tag-item">📁 项目结构</span><span class="tag-item">🏗️ MVVM架构</span><span class="tag-item">💉 依赖注入</span><span class="tag-item">📝 日志系统</span><span class="tag-item">🎨 主题系统</span><span class="tag-item">🧭 导航框架</span><span class="tag-item">🪟 窗口管理</span><span class="tag-item">🔧 配置管理</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:30px;">#</th><th>具体任务</th><th>说明</th><th>交付物</th></tr></thead>
+          <tbody>
+            <tr><td>1.1</td><td><strong>项目结构搭建</strong></td><td>创建 Avalonia 12 解决方案，规划项目分层：App.Host（启动入口）、App.Core（领域模型）、App.Infrastructure（基础设施）、App.UI（界面层）。使用 .NET 9 SDK，预留 .NET 10 LTS 升级路径。</td><td>解决方案文件、项目引用关系图</td></tr>
+            <tr><td>1.2</td><td><strong>MVVM 架构搭建</strong></td><td>集成 CommunityToolkit.Mvvm 源码生成器。建立 ViewModelBase 基类（含 INotifyPropertyChanged、IsBusy、错误处理）。建立 ObservableObject 基础、RelayCommand 异步命令支持。</td><td>ViewModelBase、示例 View/ViewModel 对</td></tr>
+            <tr><td>1.3</td><td><strong>依赖注入容器</strong></td><td>配置 Microsoft.Extensions.DependencyInjection。注册核心服务（日志、配置、导航、通信工厂）。建立服务生命周期管理（Singleton 用于设备管理器、Transient 用于 ViewModel）。</td><td>DI 容器配置代码、服务注册文档</td></tr>
+            <tr><td>1.4</td><td><strong>日志系统</strong></td><td>集成 Serilog，配置文件滚动（按日期+大小）、控制台输出、Seq 结构化日志。定义日志级别策略：开发 Debug、生产 Information+。设备通信日志单独文件存储。</td><td>Serilog 配置、日志辅助类</td></tr>
+            <tr><td>1.5</td><td><strong>主题与样式系统</strong></td><td>设计三套主题：工业蓝（默认）、暗黑（夜间/弱光）、高对比度（特殊场景）。统一定义颜色令牌、字体大小、控件样式。建立全局 Style 字典。</td><td>三套主题文件、样式设计规范</td></tr>
+            <tr><td>1.6</td><td><strong>导航框架</strong></td><td>实现 View 路由导航（Navigator + INavigationService），支持页面切换动画、面包屑导航、最近访问历史。左侧导航栏（设备监控/任务调度/报警管理/报表/系统设置）。</td><td>导航服务、导航栏 UI</td></tr>
+            <tr><td>1.7</td><td><strong>基础布局组件</strong></td><td>开发通用布局组件：PageHeader（标题+操作按钮）、StatusBar（系统时间/连接状态/用户信息/报警计数）、Sidebar（可折叠导航）、ContentArea（主工作区）、DialogHost（模态对话框容器）。</td><td>5 个通用布局组件</td></tr>
+            <tr><td>1.8</td><td><strong>窗口管理</strong></td><td>主窗口（最大化/全屏）、弹窗（模态/非模态）、系统托盘图标与菜单、单实例检测（防止重复启动）。</td><td>窗口管理服务</td></tr>
+            <tr><td>1.9</td><td><strong>配置管理</strong></td><td>实现 Options Pattern 配置系统。appsettings.json 存储运行参数（通信超时、日志级别、主题）。设备连接配置独立文件并可运行时修改热重载。</td><td>配置模型、配置 UI 页</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;margin-top:8px;"><strong>✅ Phase 1 验收标准：</strong>项目可编译运行，主窗口显示正常，导航栏可点击切换页面（空页面即可），主题切换正常，日志输出到文件。不需要连接任何真实设备。</p>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="fw-card" style="border-left:3px solid #5FA882;margin-bottom:20px;">
+    <div class="card-header">
+      <div class="card-icon" style="background:#D7EDE2;">2</div>
+      <div class="card-title">Phase 2：通信层开发 — 让上位机"听得见、说得出"</div>
+      <span class="pill pill-neutral">3~4 周</span>
+    </div>
+    <div class="card-body">
+      <div class="tag-cloud" style="margin-bottom:12px;">
+        <span class="tag-item">🔌 驱动抽象层</span><span class="tag-item">📡 Modbus TCP</span><span class="tag-item">📡 Modbus RTU</span><span class="tag-item">🔷 S7</span><span class="tag-item">🔶 OPC UA</span><span class="tag-item">📨 MQTT</span><span class="tag-item">🔄 连接池</span><span class="tag-item">💓 心跳检测</span><span class="tag-item">🪞 模拟驱动</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:30px;">#</th><th>具体任务</th><th>说明</th><th>交付物</th></tr></thead>
+          <tbody>
+            <tr><td>2.1</td><td><strong>IDeviceDriver 接口设计</strong></td><td>定义统一驱动接口：ConnectAsync / DisconnectAsync / ReadRegisterAsync / WriteRegisterAsync / SubscribeAsync。设计 DriverConfig 基类（IP地址、端口、超时、重试次数）。设计 DeviceHealth 枚举和 ConnectionStateChanged 事件。</td><td>IDeviceDriver.cs 接口定义、驱动设计文档</td></tr>
+            <tr><td>2.2</td><td><strong>Modbus TCP 驱动</strong></td><td>基于 FluentModbus 实现。支持功能码 01/02（读线圈/离散量）、03/04（读保持/输入寄存器）、05/06/0F/10（写操作）。使用 Span&lt;T&gt; 零分配解析响应帧。批量读取优化：合并相邻地址为单次请求。</td><td>ModbusTcpDriver、单元测试</td></tr>
+            <tr><td>2.3</td><td><strong>Modbus RTU 驱动</strong></td><td>基于 System.IO.Ports 实现串口通信。支持 9600/19200/38400/115200 波特率、8N1 数据位、无校验/奇校验/偶校验。CRC16 校验计算和验证。自动检测串口列表。</td><td>ModbusRtuDriver</td></tr>
+            <tr><td>2.4</td><td><strong>Siemens S7 驱动</strong></td><td>基于 S7netplus 实现。支持 S7-200/300/400/1200/1500 系列。读取 DB 块、I/Q/M 区。TSAP 自动协商。多 CPU 机架号配置。</td><td>S7Driver</td></tr>
+            <tr><td>2.5</td><td><strong>OPC UA 客户端驱动</strong></td><td>基于 OPCFoundation.NetStandard 实现。支持连接/断开、浏览节点、读取/写入变量、创建订阅（DataChange）。安全策略支持（None/Basic128Rsa15/Basic256/Basic256Sha256）。证书管理和信任。</td><td>OpcUaDriver</td></tr>
+            <tr><td>2.6</td><td><strong>MQTT 驱动</strong></td><td>基于 MQTTnet 5.0 实现。支持 QoS 0/1/2、Will Message、TLS 加密。主题设计规范（设备状态/报警/心跳）。自动重连与离线消息缓存。</td><td>MqttDriver</td></tr>
+            <tr><td>2.7</td><td><strong>连接池管理器</strong></td><td>统一管理所有设备驱动的连接。复用 TCP 连接避免频繁建链。连接数上限控制、空闲连接回收。连接健康检查（定时心跳）。</td><td>ConnectionPool 类</td></tr>
+            <tr><td>2.8</td><td><strong>心跳与自动重连</strong></td><td>每个驱动独立的定时心跳（默认 5s 间隔）。连续 3 次心跳失败触发重连。指数退避重试策略（1s → 2s → 4s → 8s → 最大 30s）。重连成功/失败事件通知上层。</td><td>心跳管理器、重连策略</td></tr>
+            <tr><td>2.9</td><td><strong>数据缓存层</strong></td><td>设备寄存器数据本地缓存（MemoryCache），设置 TTL 过期时间。读取时优先查缓存，写操作后立即更新缓存。减少对 PLC 的重复读取压力。</td><td>DeviceDataCache</td></tr>
+            <tr><td>2.10</td><td><strong>模拟设备驱动</strong></td><td>开发 VirtualDevice 模拟器：模拟堆垛机（支持前进/后退/升降/货叉动作）、模拟输送线（速度/方向/货物检测）、模拟传感器（温度/振动/电流随机波动）。用于无真实硬件时的开发和演示。</td><td>VirtualDeviceSimulator</td></tr>
+            <tr><td>2.11</td><td><strong>通信诊断面板</strong></td><td>UI 页面：显示所有设备连接状态（绿色/黄色/红色指示灯）、通信延迟、收发包计数、错误率、最后通信时间。支持单设备手动连/断、原始帧查看。</td><td>通信诊断 UI 页面</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;margin-top:8px;"><strong>✅ Phase 2 验收标准：</strong>Modbus TCP 驱动可成功连接 Modbus Slave 模拟器并读写寄存器。模拟设备驱动可独立运行。通信诊断面板实时显示连接状态。至少完成 Modbus TCP + S7 + MQTT 三个驱动的完整实现和单元测试。</p>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="fw-card" style="border-left:3px solid #D4A882;margin-bottom:20px;">
+    <div class="card-header">
+      <div class="card-icon" style="background:#F0E4D8;">3</div>
+      <div class="card-title">Phase 3：数据平台 — 把数据存好、查好、管好</div>
+      <span class="pill pill-neutral">3~4 周</span>
+    </div>
+    <div class="card-body">
+      <div class="tag-cloud" style="margin-bottom:12px;">
+        <span class="tag-item">🗄️ PostgreSQL</span><span class="tag-item">📐 EF Core</span><span class="tag-item">⚡ Redis</span><span class="tag-item">📊 TDengine</span><span class="tag-item">📡 数据管道</span><span class="tag-item">📥 断点续传</span><span class="tag-item">🧹 数据清理</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:30px;">#</th><th>具体任务</th><th>说明</th><th>交付物</th></tr></thead>
+          <tbody>
+            <tr><td>3.1</td><td><strong>数据库设计与迁移</strong></td><td>设计 PostgreSQL 业务表：Users（用户）、Roles（角色）、Permissions（权限）、Tasks（任务记录）、AlarmRules（报警规则）、AlarmLogs（报警日志）、AuditLogs（审计日志）、DeviceConfigs（设备配置）、WarehouseLayout（仓库布局）。使用 EF Core Code First + Migration。</td><td>数据库 ER 图、Migration 脚本</td></tr>
+            <tr><td>3.2</td><td><strong>EF Core 仓储层</strong></td><td>实现泛型 Repository&lt;T&gt; 基类（CRUD + 分页 + 条件查询）。各领域实体独立仓储接口。使用 Specification 模式支持复杂查询条件组合。异步方法全链路 async/await。</td><td>Repository 基类、各实体仓储</td></tr>
+            <tr><td>3.3</td><td><strong>Redis 缓存层</strong></td><td>集成 StackExchange.Redis。实现 IDistributedCache 服务。设备实时状态快照（Key: device:{id}:state, TTL: 10s）。库位实时占用（Key: location:{code}, 使用 Bitmap 或 Hash）。分布式锁（RedLock 模式，用于任务分配去重）。</td><td>Redis 缓存服务、分布式锁</td></tr>
+            <tr><td>3.4</td><td><strong>数据采集管道</strong></td><td>使用 System.Threading.Channels 构建高性能采集管道。Channel&lt;DeviceDataPoint&gt; 作为数据总线，多个 Producer（设备驱动）写入，多个 Consumer（时序存储、实时缓存、UI 推送）消费。支持背压控制和容量限制。</td><td>DataChannel 管道服务</td></tr>
+            <tr><td>3.5</td><td><strong>时序数据存储</strong></td><td>TDengine 建库建表（超级表 + 子表）。设备运行数据写入（每秒/每分钟采样）。设计数据保留策略（原始数据 6 个月、聚合数据 3 年）。批量写入优化（攒批 1000 条或 1s 超时后写入）。</td><td>TDengine 表结构、写入服务</td></tr>
+            <tr><td>3.6</td><td><strong>断点续传机制</strong></td><td>网络断开时，数据暂存本地 SQLite 离线缓冲区。网络恢复后按时间顺序回补到 TDengine。记录续传进度，支持断点续传。本地缓冲区大小限制（默认 1GB），超限时丢弃最旧数据。</td><td>离线缓冲服务</td></tr>
+            <tr><td>3.7</td><td><strong>数据清理策略</strong></td><td>定时任务（每天凌晨 3 点）清理过期数据。原始设备数据 6 个月后聚合为 5 分钟均值并删除原始数据。聚合数据 3 年后删除。清理前备份可选项。清理进度和结果日志记录。</td><td>数据清理后台任务</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;margin-top:8px;"><strong>✅ Phase 3 验收标准：</strong>数据库表创建完成、Migration 可执行。模拟设备数据能通过数据管道流入 PostgreSQL 和 TDengine。设备状态可实时写入 Redis 并读取。断网 1 分钟后恢复，离线数据自动回补。</p>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="fw-card" style="border-left:3px solid #7F8FE0;margin-bottom:20px;">
+    <div class="card-header">
+      <div class="card-icon" style="background:#DEE5F7;">4</div>
+      <div class="card-title">Phase 4：核心业务 — 把上位机的"灵魂"注入系统</div>
+      <span class="pill pill-neutral">6~8 周 — 最关键的阶段</span>
+    </div>
+    <div class="card-body">
+      <div class="tag-cloud" style="margin-bottom:12px;">
+        <span class="tag-item">📋 任务调度</span><span class="tag-item">🔁 状态机</span><span class="tag-item">🖥️ 监控看板</span><span class="tag-item">🔔 报警管理</span><span class="tag-item">🔐 权限管理</span><span class="tag-item">📝 审计日志</span><span class="tag-item">📑 报表引擎</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:30px;">#</th><th>具体任务</th><th>说明</th><th>交付物</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:600;background:#F8F9FC;" colspan="4">🔹 任务调度引擎（核心中的核心）</td></tr>
+            <tr><td>4.1</td><td><strong>任务模型设计</strong></td><td>定义 Task 实体：任务ID、类型（入库/出库/移库/盘点）、状态（待分配/执行中/已完成/失败/取消）、优先级（1-10）、来源（WMS/手动）、起止库位、分配设备、创建/开始/完成时间。</td><td>Task 模型、TaskStatus 枚举</td></tr>
+            <tr><td>4.2</td><td><strong>任务接收与解析</strong></td><td>WMS 接口对接（REST API 或数据库轮询）。任务报文解析和验证。任务入队（优先级队列 PriorityQueue）。重复任务检测和过滤。任务接收确认回复。</td><td>TaskReceiver 服务</td></tr>
+            <tr><td>4.3</td><td><strong>任务拆分与编排</strong></td><td>复合任务拆分为原子操作序列。例如"入库任务" → ①输送线启动 ②堆垛机取货 ③堆垛机移动到目标库位 ④货叉放货 ⑤确认完成。任务依赖关系管理（前置/后置任务）。</td><td>TaskOrchestrator 服务</td></tr>
+            <tr><td>4.4</td><td><strong>设备分配策略</strong></td><td>实现多种分配算法：轮询（Round-Robin）、最少任务优先、最近设备优先、自定义权重分配。支持手动指定设备和任务抢占。</td><td>DeviceAllocator 服务</td></tr>
+            <tr><td>4.5</td><td><strong>路径规划</strong></td><td>A* 算法实现仓库地图路径规划。Dijkstra 算法用于多目标最短路径。支持动态障碍物（其他设备当前位置）和静态障碍物（维修区域）。路径平滑处理。</td><td>PathPlanner 服务</td></tr>
+            <tr><td>4.6</td><td><strong>交通管制</strong></td><td>锁区（Zone Lock）/ 锁段（Segment Lock）/ 锁点（Point Lock）三级锁机制。死锁检测（资源分配图环检测算法）。死锁解除（回退策略 / 优先级抢占）。</td><td>TrafficController 服务</td></tr>
+            <tr><td style="font-weight:600;background:#F8F9FC;" colspan="4">🔹 设备状态机</td></tr>
+            <tr><td>4.7</td><td><strong>设备状态机框架</strong></td><td>使用 Stateless 库实现有限状态机（FSM）。通用设备状态：离线 → 空闲 → 运行中 → 暂停 → 故障 → 维护中。每种设备类型可扩展自定义状态。状态转换触发器和守卫条件。</td><td>DeviceStateMachine 基类</td></tr>
+            <tr><td>4.8</td><td><strong>具体设备状态机</strong></td><td>堆垛机状态机（含前进/后退/升降/货叉伸缩子状态）。AGV 状态机（含导航中/充电中/等待指令/避障暂停）。输送线状态机（含启动/停止/正转/反转/堵料/打滑）。</td><td>各设备类型状态机实现</td></tr>
+            <tr><td style="font-weight:600;background:#F8F9FC;" colspan="4">🔹 实时监控看板</td></tr>
+            <tr><td>4.9</td><td><strong>设备总览看板</strong></td><td>仓库俯视图：货架布局、设备图标（SkiaSharp 4.x SKPathBuilder 绘制）、实时位置动画。设备状态颜色指示（绿/黄/红/灰）。点击设备弹出详情面板（速度/位置/电流/温度/任务）。</td><td>设备总览看板 UI</td></tr>
+            <tr><td>4.10</td><td><strong>实时数据曲线</strong></td><td>LiveChartsCore 实现可拖拽缩放的时间序列曲线。支持多 Y 轴（温度/振动/电流叠加显示）。历史回溯（拖动时间轴回看历史数据）。</td><td>实时曲线组件</td></tr>
+            <tr><td>4.11</td><td><strong>任务执行总览</strong></td><td>待执行/执行中/已完成任务列表。任务进度条（当前步骤/总步骤）。任务甘特图（时间线视图）。任务效率统计（每小时完成数、平均耗时）。</td><td>任务监控看板</td></tr>
+            <tr><td style="font-weight:600;background:#F8F9FC;" colspan="4">🔹 报警管理系统</td></tr>
+            <tr><td>4.12</td><td><strong>报警规则引擎</strong></td><td>规则定义：触发条件（阈值/变化率/状态匹配）、报警级别（提示/警告/严重/紧急）、通知渠道、抑制条件。规则支持 AND/OR 逻辑组合。运行时动态启用/禁用规则。</td><td>报警规则模型、规则引擎</td></tr>
+            <tr><td>4.13</td><td><strong>报警通知渠道</strong></td><td>插件化通知渠道接口 IAlarmChannel。实现：声光报警（串口/GPIO 控制）、短信（阿里云/腾讯云 SMS）、邮件（SMTP）、钉钉机器人、企业微信、Webhook 回调。</td><td>通知渠道插件（至少 4 个）</td></tr>
+            <tr><td>4.14</td><td><strong>报警生命周期管理</strong></td><td>报警产生 → 通知推送 → 人工确认 → 处理中 → 处理完成 → 归档。未确认报警自动升级（超时 30s 升级到上一级）。报警抑制（同类型重复报警合并）。报警统计（按类型/级别/设备/时间段）。</td><td>报警管理完整流程</td></tr>
+            <tr><td style="font-weight:600;background:#F8F9FC;" colspan="4">🔹 用户权限与审计</td></tr>
+            <tr><td>4.15</td><td><strong>RBAC 权限系统</strong></td><td>用户 → 角色 → 权限三级模型。预置角色：管理员/工程师/操作员/只读访客。权限粒度到页面级+按钮级（查看设备监控 ✓ / 修改设备配置 ✗）。集成登录认证（本地密码 + 可选 AD/LDAP）。超时 15 分钟自动锁屏。</td><td>权限管理系统</td></tr>
+            <tr><td>4.16</td><td><strong>操作审计日志</strong></td><td>记录所有关键操作：谁、何时、从哪个 IP、做了什么操作、操作前后值。日志不可篡改（追加写入，Hash 链校验）。审计日志查询和导出（支持按时间/用户/操作类型筛选）。</td><td>审计日志服务、审计查询 UI</td></tr>
+            <tr><td style="font-weight:600;background:#F8F9FC;" colspan="4">🔹 报表引擎</td></tr>
+            <tr><td>4.17</td><td><strong>报表模板系统</strong></td><td>定义 IReportTemplate 接口。内置模板：设备稼动率日报/周报/月报、出入库效率报表、故障统计报表、能耗分析报表。数据源绑定（数据库直查 + 时序数据查询）。</td><td>报表模板基类、4 个内置模板</td></tr>
+            <tr><td>4.18</td><td><strong>报表生成与分发</strong></td><td>支持 Excel（ClosedXML）和 PDF（QuestPDF）导出。定时生成（每天 8:00 自动生成昨日报表）。邮件定时分发（可配置收件人列表）。手动触发生成和下载。</td><td>报表生成服务、定时任务</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;margin-top:8px;"><strong>✅ Phase 4 验收标准：</strong>使用模拟设备驱动可完成完整的入库/出库任务流程。设备状态机正常切换状态并有 UI 动画反馈。报警可从触发到确认到归档走通全流程。可生成日报并导出 Excel。权限控制生效（操作员无法修改配置）。</p>
+    </div>
+  </div>
+
+  <!-- Phase 5 -->
+  <div class="fw-card" style="border-left:3px solid #B89AC8;margin-bottom:20px;">
+    <div class="card-header">
+      <div class="card-icon" style="background:#E8DDEF;">5</div>
+      <div class="card-title">Phase 5：系统集成与对外接口</div>
+      <span class="pill pill-neutral">3~4 周</span>
+    </div>
+    <div class="card-body">
+      <div class="tag-cloud" style="margin-bottom:12px;">
+        <span class="tag-item">🌐 REST API</span><span class="tag-item">📡 WebSocket</span><span class="tag-item">🖥️ Web 远程</span><span class="tag-item">📨 消息队列</span><span class="tag-item">🔗 WMS对接</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:30px;">#</th><th>具体任务</th><th>说明</th><th>交付物</th></tr></thead>
+          <tbody>
+            <tr><td>5.1</td><td><strong>REST API 接口</strong></td><td>ASP.NET Core Web API（内嵌于上位机进程）。接口规范：Swagger/OpenAPI 自动文档。JWT Token 认证。接口：任务下发/查询/取消、设备状态查询、报警查询/确认、报表获取。限流保护（100 req/s）。</td><td>REST API 完整接口、Swagger 文档</td></tr>
+            <tr><td>5.2</td><td><strong>WebSocket 实时推送</strong></td><td>基于 SignalR 实现。实时推送：设备状态变化、任务进度更新、报警触发、实时数据（降采样后推送）。客户端连接管理（在线数、断开重连）。</td><td>SignalR Hub 服务</td></tr>
+            <tr><td>5.3</td><td><strong>Web 端远程监控</strong></td><td>基于 Avalonia Web / Blazor Server 实现 Web 版监控看板（与桌面端共用 ViewModel 层）。功能范围：设备状态总览（只读）、任务进度查看、报警查看与确认、报表查看与下载。不做完整的管理功能——管理操作限定在桌面端。</td><td>Web 监控看板</td></tr>
+            <tr><td>5.4</td><td><strong>消息队列集成</strong></td><td>Wolverine（MIT）集成 RabbitMQ 传输。设备状态变更发布到 MQ → 其他系统（MES/ERP/大数据平台）订阅消费。任务执行结果发布到 MQ → WMS 接收确认。</td><td>消息队列配置、消息格式规范</td></tr>
+            <tr><td>5.5</td><td><strong>WMS/ERP 对接适配器</strong></td><td>定义 IExternalSystemAdapter 接口。实现 WMS 适配器（对接常见 WMS：唯智/富勒/普罗格/自研）。实现 ERP 适配器（对接常见 ERP：SAP/用友/金蝶）。任务下发接口、执行结果回调接口。</td><td>WMS/ERP 适配器（至少 1 个演示）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;margin-top:8px;"><strong>✅ Phase 5 验收标准：</strong>Swagger 页面可正常打开并测试 API。Web 端可浏览器打开并实时看到设备状态。RabbitMQ 中可收到设备状态变更消息。模拟 WMS 系统可通过 API 下发出库任务并被正确接收执行。</p>
+    </div>
+  </div>
+
+  <!-- Phase 6 -->
+  <div class="fw-card" style="border-left:3px solid #93B888;margin-bottom:20px;">
+    <div class="card-header">
+      <div class="card-icon" style="background:#DDE8D8;">6</div>
+      <div class="card-title">Phase 6：增强功能 — 按需实施，提升产品竞争力</div>
+      <span class="pill pill-neutral">按需 · 分模块独立实施</span>
+    </div>
+    <div class="card-body">
+      <div class="tag-cloud" style="margin-bottom:12px;">
+        <span class="tag-item">🌍 多语言</span><span class="tag-item">📊 规则引擎</span><span class="tag-item">📈 趋势预测</span><span class="tag-item">🎮 3D孪生</span><span class="tag-item">🔍 异常检测</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:30px;">#</th><th>具体任务</th><th>说明</th><th>优先级</th></tr></thead>
+          <tbody>
+            <tr><td>6.1</td><td><strong>多语言国际化</strong></td><td>Avalonia 资源字典 + .resx 实现。初期支持中文/英文。语言切换无需重启（动态加载资源）。后续按需增加日文/德文等。</td><td><span class="pill pill-green">建议做</span></td></tr>
+            <tr><td>6.2</td><td><strong>设备健康评估规则引擎</strong></td><td>可配置的设备参数阈值模板。例如堆垛机：升降电机电流 &gt; 额定值 120% → 警告、&gt; 150% → 严重。支持批量导入导出阈值模板。阈值历史对比（当前 vs 上周同期）。</td><td><span class="pill pill-green">建议做</span></td></tr>
+            <tr><td>6.3</td><td><strong>统计趋势分析</strong></td><td>基于历史数据（TDengine 查询）的统计分析：移动平均线、同比/环比趋势图、季节性规律识别、异常波动自动标注。纯数学计算，无需 AI 模型。</td><td><span class="pill pill-blue">可选</span></td></tr>
+            <tr><td>6.4</td><td><strong>3D 数字孪生</strong></td><td>使用 Babylon.js + WebView2 构建 3D 仓库场景。或通过 SkiaSharp + OpenGL 互操作实现简单 3D。设备模型：堆垛机、AGV、货架、输送线。实时映射设备位置和状态。虚拟巡检漫游。</td><td><span class="pill pill-blue">可选增强</span></td></tr>
+            <tr><td>6.5</td><td><strong>ONNX 异常检测</strong></td><td>积累 6 个月以上数据后，训练 Isolation Forest 模型 → 导出 ONNX → ONNX Runtime 本地推理。检测设备异常振动模式、异常电流波动。仅在数据充足时实施。</td><td><span class="pill pill-neutral">远期计划</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 7 -->
+  <div class="fw-card" style="border-left:3px solid #C4433A;margin-bottom:20px;">
+    <div class="card-header">
+      <div class="card-icon" style="background:#FDECEA;">7</div>
+      <div class="card-title">Phase 7：测试、发布与持续交付</div>
+      <span class="pill pill-neutral">贯穿全程</span>
+    </div>
+    <div class="card-body">
+      <div class="tag-cloud" style="margin-bottom:12px;">
+        <span class="tag-item">🧪 单元测试</span><span class="tag-item">🔗 集成测试</span><span class="tag-item">⚡ 性能测试</span><span class="tag-item">🏭 现场联调</span><span class="tag-item">📦 NativeAOT</span><span class="tag-item">🐳 Docker</span><span class="tag-item">🔄 CI/CD</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:30px;">#</th><th>具体任务</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>7.1</td><td><strong>单元测试</strong></td><td>xUnit + Moq + AutoFixture。覆盖：通信协议解析/组包（Modbus 帧 CRC 校验、S7 PDU 解析）、任务调度算法（A* 路径输出验证）、报警规则引擎（各种阈值组合）、状态机转换逻辑。目标：领域层覆盖率 ≥ 80%。</td></tr>
+            <tr><td>7.2</td><td><strong>集成测试</strong></td><td>TestContainers 启动 PostgreSQL/Redis/RabbitMQ 容器。完整流程测试：模拟 WMS 下发任务 → 任务接收 → 拆分 → 分配设备 → 模拟设备执行 → 状态更新 → 结果回调。报警触发到通知全链路测试。数据库迁移测试。</td></tr>
+            <tr><td>7.3</td><td><strong>性能基准测试</strong></td><td>BenchmarkDotNet 测试：Modbus 帧解析速度（target &lt; 50μs/帧）、数据管道吞吐量（target &gt; 50K msg/s）、1000 台设备并发轮询延迟（target &lt; 100ms/轮）、UI 渲染帧率（target ≥ 60 FPS @1080p）、NativeAOT 冷启动时间（target &lt; 2s）。</td></tr>
+            <tr><td>7.4</td><td><strong>压力与稳定性测试</strong></td><td>72 小时连续运行（模拟设备持续发送数据）。内存泄漏检测（dotnet-counters / PerfView）。CPU 使用率监控（稳态 target &lt; 30%）。模拟网络中断/恢复、PLC 故障/恢复的异常场景。</td></tr>
+            <tr><td>7.5</td><td><strong>现场联调</strong></td><td>部署到真实工控机环境。对接真实 PLC（至少西门子 S7-1200 + Modbus TCP 设备）。验证实际通信延迟和稳定性。根据现场反馈调整 UI 布局、报警阈值、操作流程。</td></tr>
+            <tr><td>7.6</td><td><strong>NativeAOT 编译发布</strong></td><td>配置 .csproj：PublishAot=true、TrimMode=full。处理反射和动态加载的 AOT 兼容性问题（RD.xml 配置）。单文件发布（IncludeNativeLibrariesForSelfExtract）。目标：Windows x64 单 exe &lt; 80MB。</td></tr>
+            <tr><td>7.7</td><td><strong>Docker 容器化</strong></td><td>编写 Dockerfile（基于 .NET chiseled 镜像）。Docker Compose 编排（上位机 + PostgreSQL + Redis + TDengine + RabbitMQ）。支持环境变量注入配置。容器健康检查。</td></tr>
+            <tr><td>7.8</td><td><strong>CI/CD 流水线</strong></td><td>GitHub Actions：Push → Build → Test → Publish Artifact。自动版本号生成（GitVersion）。Release 分支触发自动打包（Windows .exe + Linux AppImage + Docker Image）。自动发布到 GitHub Release。</td></tr>
+            <tr><td>7.9</td><td><strong>用户文档</strong></td><td>安装部署手册（环境要求/安装步骤/初始配置）。操作手册（各功能模块使用说明、截图标注）。运维手册（日志查看、备份恢复、常见故障排查）。API 文档（Swagger 导出）。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;margin-top:8px;"><strong>✅ Phase 7 验收标准：</strong>单元测试覆盖率 ≥ 80%。72 小时稳定性测试无内存泄漏。NativeAOT 编译成功且启动 &lt; 2s。能通过 Docker Compose 一键部署完整环境。用户文档完整可交付。</p>
+    </div>
+  </div>
+
+  <!-- Timeline summary -->
+  <div class="fw-card" style="margin-top:16px;">
+    <div class="card-header"><div class="card-icon" style="background:#DDE3E8;">📅</div><div class="card-title">总体时间线</div></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Phase</th><th>内容</th><th>工期</th><th>累计</th><th>里程碑</th></tr></thead>
+          <tbody>
+            <tr><td>Phase 1</td><td>基础框架</td><td>2~3 周</td><td>3 周</td><td>项目可运行、主题可切换、导航可用</td></tr>
+            <tr><td>Phase 2</td><td>通信层</td><td>3~4 周</td><td>7 周</td><td>Modbus/S7/MQTT 驱动可用、模拟设备可运行</td></tr>
+            <tr><td>Phase 3</td><td>数据平台</td><td>3~4 周</td><td>11 周</td><td>数据管道流转正常、时序数据可查询</td></tr>
+            <tr><td>Phase 4</td><td>核心业务</td><td>6~8 周</td><td>19 周</td><td>完整出/入库任务可用、报警全流程可用 🎯 <strong>MVP</strong></td></tr>
+            <tr><td>Phase 5</td><td>系统集成</td><td>3~4 周</td><td>23 周</td><td>API 可用、Web 可远程监控、WMS 可对接</td></tr>
+            <tr><td>Phase 6</td><td>增强功能</td><td>按需</td><td>—</td><td>按客户需求逐步添加</td></tr>
+            <tr><td>Phase 7</td><td>测试发布</td><td>贯穿</td><td>23+ 周</td><td>稳定版本可交付 🎯 <strong>v1.0</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;margin-top:10px;"><strong>最短可交付周期：约 6 个月（23 周）达到 v1.0 可交付状态。</strong>Phase 4 结束时（约 5 个月）即可进行 Demo 演示和初步用户验收。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<div class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><div class="footer-brand-title">物流上位机系统 · 技术方案蓝皮书</div><p style="margin-top:4px;">C# + Avalonia UI · 前沿且务实 · 生产就绪 · 全部 MIT 开源</p></div>
+    <div class="footer-links">
+      <div class="footer-col"><div class="footer-col-title">核心技术</div><a href="https://dotnet.microsoft.com/" target="_blank">.NET</a><a href="https://avaloniaui.net/" target="_blank">Avalonia UI</a><a href="https://github.com/mono/SkiaSharp" target="_blank">SkiaSharp 4.x</a><a href="https://opcfoundation.org/" target="_blank">OPC Foundation</a></div>
+      <div class="footer-col"><div class="footer-col-title">免费开源替代</div><a href="https://github.com/JasperFx/wolverine" target="_blank">Wolverine (MIT)</a><a href="https://github.com/concordialabs/concordia" target="_blank">Concordia (MIT)</a><a href="https://mqtt.org/" target="_blank">MQTT</a><a href="https://tdengine.com/" target="_blank">TDengine</a></div>
+      <div class="footer-col"><div class="footer-col-title">安全标准</div><a href="https://www.isa.org/standards-and-publications/isa-standards/isa-iec-62443-series-of-standards" target="_blank">IEC 62443</a><a href="https://www.postgresql.org/" target="_blank">PostgreSQL</a></div>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom"><span>调研日期：2026年6月 · 版本 4.0 · 前沿务实版（全部 MIT 许可）</span><span>Generated by <a href="https://allyhub.com" target="_blank" style="color:var(--text-secondary);">AllyHub AI</a></span></div>
+</div>
+
+</div><!-- .page -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.querySelectorAll('#sceneTabs .tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#sceneTabs .tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#sceneTabs ~ .tab-panel').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById(this.dataset.tab).classList.add('active');
+  });
+});
+(function() {
+  const sec = document.querySelectorAll('.section')[5];
+  const canvas = document.createElement('canvas');
+  canvas.id = 'protoChart';
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:relative;height:280px;';
+  wrap.appendChild(canvas);
+  const tableWrap = sec.querySelector('.table-wrap');
+  tableWrap.parentNode.insertBefore(wrap, tableWrap.nextSibling);
+  new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: ['Modbus', 'S7', 'OPC UA', 'MQTT', 'EtherNet/IP', 'HTTP/WS'],
+      datasets: [{ label: '国内工厂使用率 (%)', data: [95, 90, 72, 68, 40, 92], backgroundColor: ['#6E9298','#9BADB0','#5FA882','#D4A882','#B87D50','#7F8FE0'], borderRadius: 6, borderSkipped: false }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: '#E8E6E2' }, ticks: { callback: v => v+'%' } }, x: { grid: { display: false } } } }
+  });
+})();
+(function() {
+  const sec = document.querySelectorAll('.section')[6];
+  const canvas = document.createElement('canvas');
+  canvas.id = 'sceneChart';
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:relative;height:280px;';
+  wrap.appendChild(canvas);
+  const tabsEl = sec.querySelector('.tabs');
+  tabsEl.parentNode.insertBefore(wrap, tabsEl.nextSibling.nextSibling);
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: ['立库', 'AGV调度', '分拣系统', '产线监控', '物流中心'],
+      datasets: [
+        { label: '系统复杂度', data: [75, 80, 65, 70, 90], borderColor: '#6E9298', backgroundColor: 'rgba(110,146,152,0.06)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 1.5 },
+        { label: '市场需求', data: [85, 90, 82, 88, 92], borderColor: '#5FA882', backgroundColor: 'rgba(95,168,130,0.05)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 1.5 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } } }, scales: { y: { min: 50, max: 100, grid: { color: '#E8E6E2' } }, x: { grid: { display: false } } } }
+  });
+})();
+</script>
+</body>
+</html>
