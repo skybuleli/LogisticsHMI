@@ -2,6 +2,7 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using App.Core;
+using App.UI.Services;
 
 namespace App.UI.ViewModels;
 
@@ -14,11 +15,14 @@ public partial class HomeViewModel : ViewModelBase, IDisposable
 {
     private static readonly Random _rng = new();
     private readonly System.Timers.Timer _timer;
+    private readonly ThemeService _themeService;
 
-    public HomeViewModel()
+    public HomeViewModel(ThemeService themeService)
     {
+        _themeService = themeService;
         Title = "仪表盘";
         _currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        _currentThemeName = _themeService.CurrentThemeName;
 
         // 每秒更新一次时间
         _timer = new System.Timers.Timer(1000);
@@ -47,6 +51,9 @@ public partial class HomeViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private int _activeAlarms = 1;
+
+    [ObservableProperty]
+    private string _currentThemeName;
 
     /// <summary>
     /// 刷新命令 — 手动触发数据刷新。
@@ -78,6 +85,17 @@ public partial class HomeViewModel : ViewModelBase, IDisposable
     private void DismissError()
     {
         ClearError();
+    }
+
+    /// <summary>
+    /// 切换主题命令（循环切换）。
+    /// </summary>
+    [RelayCommand]
+    private void SwitchTheme()
+    {
+        _themeService.SwitchToNextTheme();
+        CurrentThemeName = _themeService.CurrentThemeName;
+        Title = $"仪表盘 · {CurrentThemeName}";
     }
 
     public void Dispose()

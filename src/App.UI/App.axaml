@@ -4,4 +4,13 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+
+    <!-- 默认主题资源（工业蓝），运行时由 ThemeService 切换 -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://App.UI/Styles/Colors.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

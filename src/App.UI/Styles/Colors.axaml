@@ -1,0 +1,76 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        ═══════════════════════════════════════════════════════════════
+        全局颜色令牌 — Industrial Blue (工业蓝) 默认主题
+        所有颜色引用都通过 {DynamicResource ColorKey} 访问
+        三套主题共享相同的资源 Key，仅改变 Color 值
+        ═══════════════════════════════════════════════════════════════
+    -->
+
+    <!-- ── 基础色 ────────────────────────────── -->
+    <Color x:Key="ColorPrimary">#1B3A5C</Color>
+    <Color x:Key="ColorPrimaryLight">#2C5282</Color>
+    <Color x:Key="ColorPrimaryDark">#0F2440</Color>
+
+    <!-- ── 语义色 ────────────────────────────── -->
+    <Color x:Key="ColorSuccess">#38A169</Color>
+    <Color x:Key="ColorWarning">#DD6B20</Color>
+    <Color x:Key="ColorDanger">#E53E3E</Color>
+    <Color x:Key="ColorInfo">#3182CE</Color>
+
+    <!-- ── 背景色 ────────────────────────────── -->
+    <Color x:Key="ColorBgPrimary">#F5F5F5</Color>
+    <Color x:Key="ColorBgSecondary">#FFFFFF</Color>
+    <Color x:Key="ColorBgTertiary">#EDEDED</Color>
+
+    <!-- ── 文字色 ────────────────────────────── -->
+    <Color x:Key="ColorTextPrimary">#151515</Color>
+    <Color x:Key="ColorTextSecondary">#666666</Color>
+    <Color x:Key="ColorTextDisabled">#AAAAAA</Color>
+    <Color x:Key="ColorTextOnPrimary">#FFFFFF</Color>
+
+    <!-- ── 边框/分隔线 ────────────────────────── -->
+    <Color x:Key="ColorBorder">#D0D0D0</Color>
+    <Color x:Key="ColorDivider">#E0E0E0</Color>
+
+    <!-- ── 状态指示色 ────────────────────────── -->
+    <Color x:Key="ColorOnline">#38A169</Color>
+    <Color x:Key="ColorIdle">#718096</Color>
+    <Color x:Key="ColorBusy">#3182CE</Color>
+    <Color x:Key="ColorAlarm">#E53E3E</Color>
+    <Color x:Key="ColorWarningStatus">#DD6B20</Color>
+    <Color x:Key="ColorOffline">#A0AEC0</Color>
+
+    <!-- ── 卡片色 ────────────────────────────── -->
+    <Color x:Key="ColorCardDevice">#1B3A5C</Color>
+    <Color x:Key="ColorCardTask">#2E7D32</Color>
+    <Color x:Key="ColorCardComplete">#1565C0</Color>
+    <Color x:Key="ColorCardAlarm">#C62828</Color>
+
+    <!-- ── 悬停 / 选中 ────────────────────────── -->
+    <Color x:Key="ColorHover">#EDF2F7</Color>
+    <Color x:Key="ColorSelected">#BEE3F8</Color>
+
+    <!-- ── 阴影 ──────────────────────────────── -->
+    <Color x:Key="ColorShadow">#1A000000</Color>
+    <Color x:Key="ColorShadowLight">#0D000000</Color>
+
+    <!-- ═══════════════════════════════════════════
+         基于 Color 的 SolidColorBrush 资源
+         用途：支持 Opacity 叠加的绑定场景
+         ═══════════════════════════════════════════ -->
+    <SolidColorBrush x:Key="BrushPrimary" Color="{DynamicResource ColorPrimary}" />
+    <SolidColorBrush x:Key="BrushPrimaryLight" Color="{DynamicResource ColorPrimaryLight}" />
+    <SolidColorBrush x:Key="BrushSuccess" Color="{DynamicResource ColorSuccess}" />
+    <SolidColorBrush x:Key="BrushWarning" Color="{DynamicResource ColorWarning}" />
+    <SolidColorBrush x:Key="BrushDanger" Color="{DynamicResource ColorDanger}" />
+    <SolidColorBrush x:Key="BrushInfo" Color="{DynamicResource ColorInfo}" />
+    <SolidColorBrush x:Key="BrushBgPrimary" Color="{DynamicResource ColorBgPrimary}" />
+    <SolidColorBrush x:Key="BrushBgSecondary" Color="{DynamicResource ColorBgSecondary}" />
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="{DynamicResource ColorTextPrimary}" />
+    <SolidColorBrush x:Key="BrushTextSecondary" Color="{DynamicResource ColorTextSecondary}" />
+    <SolidColorBrush x:Key="BrushBorder" Color="{DynamicResource ColorBorder}" />
+    <SolidColorBrush x:Key="BrushOnline" Color="{DynamicResource ColorOnline}" />
+    <SolidColorBrush x:Key="BrushAlarm" Color="{DynamicResource ColorAlarm}" />
+</ResourceDictionary>

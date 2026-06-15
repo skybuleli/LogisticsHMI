@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using App.UI;
+using App.UI.Services;
 using App.UI.ViewModels;
 
 namespace App.Host;
@@ -16,12 +17,13 @@ internal static class ServiceCollectionExtensions
     public static IServiceCollection AddLogisticsHmiServices(this IServiceCollection services)
     {
         // ── Views ───────────────────────────────────────────
-        // MainWindow 依赖 HomeViewModel，通过构造函数注入
         services.AddTransient<MainWindow>();
 
         // ── ViewModels ──────────────────────────────────────
-        // Transient: 每次导航到页面时创建新实例
         services.AddTransient<HomeViewModel>();
+
+        // ── UI 服务 ─────────────────────────────────────────
+        services.AddSingleton<ThemeService>();
 
         // ── 基础设施服务（后续 Phase 启用）────────────────────
         // services.AddSingleton<IDeviceManager, DeviceManager>();

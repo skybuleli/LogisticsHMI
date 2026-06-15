@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 高对比度主题 — 适合阳光直射/视力需求场景 -->
+
+    <Color x:Key="ColorPrimary">#0033CC</Color>
+    <Color x:Key="ColorPrimaryLight">#0044FF</Color>
+    <Color x:Key="ColorPrimaryDark">#002299</Color>
+
+    <Color x:Key="ColorSuccess">#007A33</Color>
+    <Color x:Key="ColorWarning">#CC5500</Color>
+    <Color x:Key="ColorDanger">#CC0000</Color>
+    <Color x:Key="ColorInfo">#0055CC</Color>
+
+    <Color x:Key="ColorBgPrimary">#FFFFFF</Color>
+    <Color x:Key="ColorBgSecondary">#F0F0F0</Color>
+    <Color x:Key="ColorBgTertiary">#FFFFFF</Color>
+
+    <Color x:Key="ColorTextPrimary">#000000</Color>
+    <Color x:Key="ColorTextSecondary">#333333</Color>
+    <Color x:Key="ColorTextDisabled">#666666</Color>
+    <Color x:Key="ColorTextOnPrimary">#FFFFFF</Color>
+
+    <Color x:Key="ColorBorder">#000000</Color>
+    <Color x:Key="ColorDivider">#000000</Color>
+
+    <Color x:Key="ColorOnline">#007A33</Color>
+    <Color x:Key="ColorIdle">#555555</Color>
+    <Color x:Key="ColorBusy">#0033CC</Color>
+    <Color x:Key="ColorAlarm">#CC0000</Color>
+    <Color x:Key="ColorWarningStatus">#CC5500</Color>
+    <Color x:Key="ColorOffline">#888888</Color>
+
+    <Color x:Key="ColorCardDevice">#0033CC</Color>
+    <Color x:Key="ColorCardTask">#007A33</Color>
+    <Color x:Key="ColorCardComplete">#0033CC</Color>
+    <Color x:Key="ColorCardAlarm">#CC0000</Color>
+
+    <Color x:Key="ColorHover">#DDE8F0</Color>
+    <Color x:Key="ColorSelected">#B3D4FF</Color>
+
+    <Color x:Key="ColorShadow">#80000000</Color>
+    <Color x:Key="ColorShadowLight">#40000000</Color>
+
+    <SolidColorBrush x:Key="BrushPrimary" Color="{DynamicResource ColorPrimary}" />
+    <SolidColorBrush x:Key="BrushBgPrimary" Color="{DynamicResource ColorBgPrimary}" />
+    <SolidColorBrush x:Key="BrushBgSecondary" Color="{DynamicResource ColorBgSecondary}" />
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="{DynamicResource ColorTextPrimary}" />
+    <SolidColorBrush x:Key="BrushBorder" Color="{DynamicResource ColorBorder}" />
+</ResourceDictionary>
