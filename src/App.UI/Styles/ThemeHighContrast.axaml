@@ -19,6 +19,7 @@
     <Color x:Key="ColorTextSecondary">#333333</Color>
     <Color x:Key="ColorTextDisabled">#666666</Color>
     <Color x:Key="ColorTextOnPrimary">#FFFFFF</Color>
+    <Color x:Key="ColorTextTertiary">#555555</Color>
 
     <Color x:Key="ColorBorder">#000000</Color>
     <Color x:Key="ColorDivider">#000000</Color>
@@ -45,5 +46,13 @@
     <SolidColorBrush x:Key="BrushBgPrimary" Color="{DynamicResource ColorBgPrimary}" />
     <SolidColorBrush x:Key="BrushBgSecondary" Color="{DynamicResource ColorBgSecondary}" />
     <SolidColorBrush x:Key="BrushTextPrimary" Color="{DynamicResource ColorTextPrimary}" />
+    <SolidColorBrush x:Key="BrushTextSecondary" Color="{DynamicResource ColorTextSecondary}" />
+    <SolidColorBrush x:Key="BrushTextTertiary" Color="{DynamicResource ColorTextTertiary}" />
     <SolidColorBrush x:Key="BrushBorder" Color="{DynamicResource ColorBorder}" />
+
+    <SolidColorBrush x:Key="TextPrimary" Color="{DynamicResource ColorTextPrimary}" />
+    <SolidColorBrush x:Key="TextSecondary" Color="{DynamicResource ColorTextSecondary}" />
+    <SolidColorBrush x:Key="TextTertiary" Color="{DynamicResource ColorTextTertiary}" />
+    <SolidColorBrush x:Key="BrushSidebar" Color="{DynamicResource ColorBgTertiary}" />
+    <SolidColorBrush x:Key="BrushBorderSubtle" Color="{DynamicResource ColorDivider}" />
 </ResourceDictionary>

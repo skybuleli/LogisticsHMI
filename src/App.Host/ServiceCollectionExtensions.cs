@@ -30,6 +30,7 @@ internal static class ServiceCollectionExtensions
 
         // ── UI 服务 ─────────────────────────────────────────
         services.AddSingleton<ThemeService>();
+        services.AddSingleton<IDialogService, DialogService>();
 
         // ── 基础设施服务（后续 Phase 启用）────────────────────
         // services.AddSingleton<IDeviceManager, DeviceManager>();

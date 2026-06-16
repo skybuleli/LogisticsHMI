@@ -60,6 +60,9 @@
          基于 Color 的 SolidColorBrush 资源
          用途：支持 Opacity 叠加的绑定场景
          ═══════════════════════════════════════════ -->
+    <!-- ── 三级文字色（新增）───────────────────── -->
+    <Color x:Key="ColorTextTertiary">#999999</Color>
+
     <SolidColorBrush x:Key="BrushPrimary" Color="{DynamicResource ColorPrimary}" />
     <SolidColorBrush x:Key="BrushPrimaryLight" Color="{DynamicResource ColorPrimaryLight}" />
     <SolidColorBrush x:Key="BrushSuccess" Color="{DynamicResource ColorSuccess}" />
@@ -70,7 +73,15 @@
     <SolidColorBrush x:Key="BrushBgSecondary" Color="{DynamicResource ColorBgSecondary}" />
     <SolidColorBrush x:Key="BrushTextPrimary" Color="{DynamicResource ColorTextPrimary}" />
     <SolidColorBrush x:Key="BrushTextSecondary" Color="{DynamicResource ColorTextSecondary}" />
+    <SolidColorBrush x:Key="BrushTextTertiary" Color="{DynamicResource ColorTextTertiary}" />
     <SolidColorBrush x:Key="BrushBorder" Color="{DynamicResource ColorBorder}" />
     <SolidColorBrush x:Key="BrushOnline" Color="{DynamicResource ColorOnline}" />
     <SolidColorBrush x:Key="BrushAlarm" Color="{DynamicResource ColorAlarm}" />
+
+    <!-- ── 简名别名（兼容已有 XAML 引用）─────────── -->
+    <SolidColorBrush x:Key="TextPrimary" Color="{DynamicResource ColorTextPrimary}" />
+    <SolidColorBrush x:Key="TextSecondary" Color="{DynamicResource ColorTextSecondary}" />
+    <SolidColorBrush x:Key="TextTertiary" Color="{DynamicResource ColorTextTertiary}" />
+    <SolidColorBrush x:Key="BrushSidebar" Color="{DynamicResource ColorBgTertiary}" />
+    <SolidColorBrush x:Key="BrushBorderSubtle" Color="{DynamicResource ColorDivider}" />
 </ResourceDictionary>

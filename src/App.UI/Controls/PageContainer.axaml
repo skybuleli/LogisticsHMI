@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Name="_self"
+             x:Class="App.UI.Controls.PageContainer">
+    <Grid>
+        <!-- 页面主体内容区（标题由 ShellView 顶栏统一管理） -->
+        <ContentControl Content="{Binding PageContent, ElementName=_self}"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch" />
+
+        <!-- 加载遮罩 -->
+        <Border IsVisible="{Binding IsLoading, ElementName=_self}"
+                Background="#80FFFFFF"
+                ZIndex="100">
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <ProgressBar IsIndeterminate="True"
+                             Width="160" Height="4"
+                             Margin="0,0,0,12" />
+                <TextBlock Text="{Binding LoadingText, ElementName=_self}"
+                           FontSize="13"
+                           Foreground="{DynamicResource TextSecondary}"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

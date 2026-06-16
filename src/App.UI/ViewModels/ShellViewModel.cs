@@ -1,4 +1,6 @@
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using App.Core;
@@ -8,18 +10,24 @@ namespace App.UI.ViewModels;
 
 /// <summary>
 /// 主 Shell 布局 ViewModel。
-/// 管理侧边栏菜单导航、内容区页面切换、面包屑、主题切换。
+/// 管理侧边栏菜单导航、内容区页面切换、面包屑、主题切换、状态栏数据。
 /// </summary>
-public partial class ShellViewModel : ViewModelBase
+public partial class ShellViewModel : ViewModelBase, IDisposable
 {
     private readonly INavigationService _navigationService;
     private readonly ThemeService _themeService;
+    private readonly IDialogService _dialogService;
 
-    public ShellViewModel(INavigationService navigationService, ThemeService themeService)
+    public ShellViewModel(
+        INavigationService navigationService,
+        ThemeService themeService,
+        IDialogService dialogService)
     {
         _navigationService = navigationService;
         _themeService = themeService;
+        _dialogService = dialogService;
         _currentThemeName = _themeService.CurrentThemeName;
+        StatusBar = new StatusBarViewModel();
         Title = "物流上位机系统";
 
         // 注册可导航页面
@@ -40,6 +48,13 @@ public partial class ShellViewModel : ViewModelBase
     /// <summary>当前主题名称。</summary>
     [ObservableProperty]
     private string _currentThemeName;
+
+    /// <summary>通知未读数（报警数量）。</summary>
+    [ObservableProperty]
+    private int _notificationCount = 1;
+
+    /// <summary>状态栏 ViewModel。</summary>
+    public StatusBarViewModel StatusBar { get; }
 
     /// <summary>侧边栏菜单项。</summary>
     public ObservableCollection<SidebarItem> MenuItems { get; } = [];
@@ -88,6 +103,13 @@ public partial class ShellViewModel : ViewModelBase
         CurrentThemeName = _themeService.CurrentThemeName;
     }
 
+    /// <summary>清除通知计数。</summary>
+    [RelayCommand]
+    private void ClearNotifications()
+    {
+        NotificationCount = 0;
+    }
+
     // ═══════════════════════════════════════════════════════════
     // 内部方法
     // ═══════════════════════════════════════════════════════════
@@ -123,12 +145,17 @@ public partial class ShellViewModel : ViewModelBase
         // 更新当前页面标题
         PageTitle = _navigationService.Breadcrumbs.LastOrDefault()?.Title ?? "";
 
-        // 更新面包屑文本（首页 /> 上级 > 当前页）
+        // 更新面包屑文本
         BreadcrumbText = string.Join(" › ", _navigationService.Breadcrumbs.Select(c => c.Title));
 
         // 更新菜单选中状态
         var currentKey = _navigationService.CurrentPageKey;
         foreach (var item in MenuItems)
             item.IsSelected = item.PageKey == currentKey;
+    }
+
+    public void Dispose()
+    {
+        StatusBar?.Dispose();
     }
 }

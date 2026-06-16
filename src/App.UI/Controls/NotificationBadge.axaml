@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="App.UI.Controls.NotificationBadge">
+    <Grid>
+        <!-- 通知图标 -->
+        <TextBlock x:Name="PART_Icon" FontSize="18"
+                   VerticalAlignment="Center"
+                   Text="🔔" />
+
+        <!-- 徽标角标 -->
+        <Border x:Name="PART_Badge"
+                ZIndex="10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                MinWidth="16" MinHeight="16"
+                CornerRadius="8"
+                Padding="4,0"
+                Background="{DynamicResource BrushDanger}"
+                BorderThickness="0"
+                IsVisible="False"
+                Margin="10,-6,0,0">
+            <TextBlock x:Name="PART_BadgeText"
+                       Text="0"
+                       FontSize="10"
+                       FontWeight="700"
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Border>
+    </Grid>
+</UserControl>

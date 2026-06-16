@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:App.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1060" d:DesignHeight="32"
+             x:Class="App.UI.Controls.StatusBarView"
+             x:DataType="viewmodels:StatusBarViewModel">
+    <Border Padding="16,0"
+            Background="{DynamicResource BrushSidebar}">
+        <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+
+            <!-- 连接状态指示器 -->
+            <Grid ColumnDefinitions="Auto,Auto" Margin="0,0,24,0">
+                <Ellipse Width="8" Height="8"
+                         Fill="{DynamicResource BrushOnline}"
+                         VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1"
+                           Text="{Binding ConnectionStatus, FallbackValue=已连接}"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextSecondary}"
+                           VerticalAlignment="Center"
+                           Margin="6,0,0,0" />
+            </Grid>
+
+            <!-- 系统状态 -->
+            <TextBlock Grid.Column="1"
+                       Text="{Binding SystemState, FallbackValue=运行正常}"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextSecondary}"
+                       VerticalAlignment="Center" />
+
+            <!-- 撑满中间 -->
+            <TextBlock Grid.Column="2" Text="" />
+
+            <!-- 当前操作 -->
+            <TextBlock Grid.Column="3"
+                       Text="{Binding CurrentOperation, FallbackValue=就绪}"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextTertiary}"
+                       VerticalAlignment="Center"
+                       Margin="0,0,24,0" />
+
+            <!-- 系统时间 -->
+            <TextBlock Grid.Column="4"
+                       Text="{Binding CurrentTime, FallbackValue=--:--:--}"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextSecondary}"
+                       VerticalAlignment="Center" />
+        </Grid>
+    </Border>
+</UserControl>
