@@ -12,6 +12,8 @@ public class AppConfig
     public ThemeConfig Theme { get; set; } = new();
     public CommunicationConfig Communication { get; set; } = new();
     public DeviceScanConfig DeviceScan { get; set; } = new();
+    public ConnectionPoolConfig ConnectionPool { get; set; } = new();
+    public List<DeviceConfigEntry> Devices { get; set; } = [];
 }
 
 /// <summary>
