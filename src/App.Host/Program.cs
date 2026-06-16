@@ -2,6 +2,7 @@ using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using App.Infrastructure.Logging;
+using App.UI.Services;
 
 namespace App.Host;
 
@@ -9,6 +10,15 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
+        // 单实例检测
+        using var instanceGuard = new SingleInstanceGuard();
+        if (!instanceGuard.TryAcquire())
+        {
+            SingleInstanceGuard.NotifyExistingInstance();
+            Console.Error.WriteLine("已有实例正在运行，当前实例退出。");
+            return;
+        }
+
         // 配置 Serilog（主日志 + 通信日志 + 控制台）
         Log.Logger = LoggingConfiguration.CreateLogger();
 
