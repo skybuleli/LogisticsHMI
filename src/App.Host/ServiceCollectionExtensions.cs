@@ -47,6 +47,9 @@ internal static class ServiceCollectionExtensions
         // Phase 2.8 心跳服务
         services.AddSingleton<IHeartbeatService, HeartbeatService>();
 
+        // Phase 2.9 设备数据缓存
+        services.AddSingleton<IDeviceDataCache, DeviceDataCache>();
+
         // 按设备配置列表注册驱动（通过连接池自动管理生命周期）
         // 注：单个驱动 Transient 注册保留以供直接使用，
         // 生产环境应通过 IDeviceConnectionPool.GetDriverAsync(deviceId) 获取。

@@ -29,6 +29,9 @@ public interface IConfigurationService
     /// <summary>心跳配置。</summary>
     HeartbeatConfig Heartbeat { get; }
 
+    /// <summary>设备数据缓存配置。</summary>
+    DeviceDataCacheConfig DeviceDataCache { get; }
+
     /// <summary>配置变更事件（热重载时触发）。</summary>
     event EventHandler<ConfigChangedEventArgs>? ConfigChanged;
 

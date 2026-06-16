@@ -14,6 +14,7 @@ public class AppConfig
     public DeviceScanConfig DeviceScan { get; set; } = new();
     public ConnectionPoolConfig ConnectionPool { get; set; } = new();
     public HeartbeatConfig Heartbeat { get; set; } = new();
+    public DeviceDataCacheConfig DeviceDataCache { get; set; } = new();
     public List<DeviceConfigEntry> Devices { get; set; } = [];
 }
 

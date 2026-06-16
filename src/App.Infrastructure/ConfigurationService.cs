@@ -39,6 +39,7 @@ public class ConfigurationService : IConfigurationService, IDisposable
     public CommunicationConfig Communication => Current.Communication;
     public DeviceScanConfig DeviceScan => Current.DeviceScan;
     public HeartbeatConfig Heartbeat => Current.Heartbeat;
+    public DeviceDataCacheConfig DeviceDataCache => Current.DeviceDataCache;
 
     public event EventHandler<ConfigChangedEventArgs>? ConfigChanged;
 
