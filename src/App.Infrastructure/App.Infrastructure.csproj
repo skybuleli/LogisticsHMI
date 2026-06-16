@@ -14,6 +14,9 @@
     <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <!-- Modbus RTU 驱动：串口访问。注意：macOS 上 Open() 会抛 PlatformNotSupportedException，
+         但编译不受影响；真实串口验证在 Windows/Linux 环境（P2.10 模拟设备 / P7.5 现场联调）。 -->
+    <PackageReference Include="System.IO.Ports" Version="9.0.17" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -22,5 +25,10 @@
     <Nullable>enable</Nullable>
     <RootNamespace>App.Infrastructure</RootNamespace>
   </PropertyGroup>
+
+  <!-- 暴露 internal 协议工具类给测试工程 -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="App.Infrastructure.Tests" />
+  </ItemGroup>
 
 </Project>

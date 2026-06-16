@@ -575,48 +575,48 @@ public sealed class ModbusTcpDriver : IDeviceDriver
             return false;
         }
 
-        // 尝试解析 FC:Address 格式
+        // 尝试解析 FC:Address 格式，支持十六进制（如 "0F:0"）和十进制（如 "15:0"）
         var colonIndex = address.IndexOf(':');
         if (colonIndex > 0 && colonIndex <= 2) // FC 前缀最多 2 位
         {
             var fcPart = address[..colonIndex];
             var addrPart = address[(colonIndex + 1)..];
 
-            if (byte.TryParse(fcPart, out var fcByte) &&
-                ushort.TryParse(addrPart, out var addr))
+            // 先尝试十进制，若失败则尝试十六进制
+            if ((!byte.TryParse(fcPart, out var fcByte) ||
+                 !ushort.TryParse(addrPart, out var addr)) &&
+                !(byte.TryParse(fcPart, System.Globalization.NumberStyles.HexNumber, null, out fcByte) &&
+                  ushort.TryParse(addrPart, out addr)))
             {
-                functionCode = (ModbusFunctionCode)fcByte;
-                startAddress = addr;
-                return true;
+                return false;
             }
+
+            functionCode = (ModbusFunctionCode)fcByte;
+            startAddress = addr;
+            return true;
         }
 
-        // 纯数字地址 → 默认保持寄存器
+        // 纯数字地址 → 优先匹配 PLC 标准地址段，否则默认保持寄存器
         if (ushort.TryParse(address, out var plainAddr))
         {
-            // 支持 4xxxxx 格式（PLC 地址），自动减去偏移
-            if (plainAddr >= 40001)
+            if (plainAddr is >= 40001 and <= 49999)
             {
                 functionCode = ModbusFunctionCode.ReadHoldingRegisters;
                 startAddress = (ushort)(plainAddr - 40001);
             }
-            else if (plainAddr >= 30001)
+            else if (plainAddr is >= 30001 and <= 39999)
             {
                 functionCode = ModbusFunctionCode.ReadInputRegisters;
                 startAddress = (ushort)(plainAddr - 30001);
             }
-            else if (plainAddr >= 10001)
+            else if (plainAddr is >= 10001 and <= 19999)
             {
                 functionCode = ModbusFunctionCode.ReadDiscreteInputs;
                 startAddress = (ushort)(plainAddr - 10001);
             }
-            else if (plainAddr >= 1)
-            {
-                functionCode = ModbusFunctionCode.ReadCoils;
-                startAddress = (ushort)(plainAddr - 1);
-            }
             else
             {
+                // 范围外（含 < 10001）的纯数字默认保持寄存器
                 functionCode = ModbusFunctionCode.ReadHoldingRegisters;
                 startAddress = plainAddr;
             }
@@ -640,28 +640,35 @@ public sealed class ModbusTcpDriver : IDeviceDriver
             return false;
         }
 
-        // 尝试解析 FC:Address 格式
+        // 尝试解析 FC:Address 格式，支持十六进制（如 "0F:0"）和十进制（如 "15:0"）
         var colonIndex = address.IndexOf(':');
         if (colonIndex > 0 && colonIndex <= 2)
         {
             var fcPart = address[..colonIndex];
             var addrPart = address[(colonIndex + 1)..];
 
-            if (byte.TryParse(fcPart, out var fcByte) &&
-                ushort.TryParse(addrPart, out var addr))
+            // 先尝试十进制，若失败则尝试十六进制
+            byte fcByte;
+            ushort addr;
+            if ((!byte.TryParse(fcPart, out fcByte) ||
+                 !ushort.TryParse(addrPart, out addr)) &&
+                !(byte.TryParse(fcPart, System.Globalization.NumberStyles.HexNumber, null, out fcByte) &&
+                  ushort.TryParse(addrPart, out addr)))
             {
-                var fc = (ModbusFunctionCode)fcByte;
+                return false;
+            }
 
-                // 验证功能码是否为写操作
-                if (fc is ModbusFunctionCode.WriteSingleCoil
-                    or ModbusFunctionCode.WriteSingleRegister
-                    or ModbusFunctionCode.WriteMultipleCoils
-                    or ModbusFunctionCode.WriteMultipleRegisters)
-                {
-                    functionCode = fc;
-                    startAddress = addr;
-                    return true;
-                }
+            var fc = (ModbusFunctionCode)fcByte;
+
+            // 验证功能码是否为写操作
+            if (fc is ModbusFunctionCode.WriteSingleCoil
+                or ModbusFunctionCode.WriteSingleRegister
+                or ModbusFunctionCode.WriteMultipleCoils
+                or ModbusFunctionCode.WriteMultipleRegisters)
+            {
+                functionCode = fc;
+                startAddress = addr;
+                return true;
             }
         }
 

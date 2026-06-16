@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <RootNamespace>App.Infrastructure.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\App.Core\App.Core.csproj" />
+    <ProjectReference Include="..\..\src\App.Infrastructure\App.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

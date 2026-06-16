@@ -41,6 +41,10 @@ internal static class ServiceCollectionExtensions
 
         // ── Phase 2 通信服务 ──────────────────────────────────
         services.AddTransient<ModbusTcpDriver>();
+        services.AddTransient<ModbusRtuDriver>();
+        // 注：驱动配置(ModbusDriverConfig / ModbusRtuDriverConfig)目前尚未从 appsettings 绑定，
+        // 这里的 Transient 注册仅为占位。Phase 2.7 实现 IDeviceDriverFactory 后，
+        // 将改为按 Devices 配置列表通过工厂实例化驱动。
         // TODO: Phase 2.7 实现 IDeviceDriverFactory 后，通过工厂管理多设备驱动实例
 
         return services;
