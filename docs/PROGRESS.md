@@ -2,7 +2,7 @@
 
 > 最后更新：2026-06-16
 > 当前阶段：Phase 2 — 通信层开发 🔄 进行中（2026-06-16）
-> 完成度：18/70 任务 (25.7%)
+> 完成度：20/70 任务 (28.6%)
 ---
 
 ## ── 图例 ──
@@ -89,8 +89,8 @@
 |----|------|------|----------|------|
 | 2.1 | IDeviceDriver 接口设计（Config、枚举、事件） | ✅ | 2026-06-16 | src/App.Core/Interfaces/IDeviceDriver.cs, src/App.Core/Models/DriverConfigBase.cs, src/App.Core/Events/ConnectionStateChangedEventArgs.cs |
 | 2.2 | Modbus TCP 驱动（裸 TCP 实现功能码 01-10、Span<T> 零分配） | ✅ | 2026-06-16 | src/App.Infrastructure/Drivers/ModbusTcpDriver.cs |
-| 2.3 | Modbus RTU 驱动（System.IO.Ports、CRC16） | ⬜ | — | — |
-| 2.4 | Siemens S7 驱动（S7netplus、DB/I/Q/M、TSAP） | ⬜ | — | — |
+| 2.3 | Modbus RTU 驱动（System.IO.Ports、CRC16） | ✅ | 2026-06-16 | src/App.Infrastructure/Drivers/ModbusRtuDriver.cs, src/App.Infrastructure/Drivers/ModbusProtocol.cs, src/App.Core/Models/ModbusRtuDriverConfig.cs, tests/App.Infrastructure.Tests/ModbusProtocolTests.cs (46项测试) |
+| 2.4 | Siemens S7 驱动（S7netplus、DB/I/Q/M、TSAP） | ✅ | 2026-06-16 | src/App.Infrastructure/Drivers/S7Driver.cs, src/App.Core/Models/S7DriverConfig.cs, tests/App.Infrastructure.Tests/S7DriverTests.cs (28项测试) |
 | 2.5 | OPC UA 客户端驱动（OPCFoundation、安全策略、证书） | ⬜ | — | — |
 | 2.6 | MQTT 驱动（MQTTnet 5、QoS、Will Message、TLS） | ⬜ | — | — |
 | 2.7 | 连接池管理器（复用、限流、健康检查） | ⬜ | — | — |
@@ -189,7 +189,7 @@
 # ===================================================================
 | ID | 任务 | 状态 | 完成时间 | 证据 |
 |----|------|------|----------|------|
-| 7.1 | 单元测试框架（xUnit + Moq + AutoFixture，贯穿 Phase 1~6） | ⬜ | — | — |
+| 7.1 | 单元测试框架（xUnit + Moq + AutoFixture，贯穿 Phase 1~6） | 🔄 | 2026-06-16 | tests/App.Core.Tests (18项), tests/App.Infrastructure.Tests (46项), 共64项测试全通过 |
 | 7.2 | 集成测试（TestContainers 容器化测试，Phase 3 起） | ⬜ | — | — |
 | 7.3 | 性能基准测试（BenchmarkDotNet，Phase 2 起） | ⬜ | — | — |
 | 7.4 | 压力稳定性测试（72h 连续运行、内存泄漏检测） | ⬜ | — | — |
@@ -207,16 +207,16 @@
 |-------|--------|--------|--------|--------|--------|
 | P0 规划 | 5 | 5 | 0 | 0 | **100%** |
 | P1 基础框架 | 12 | 12 | 0 | 0 | **100% ✅** |
-| P2 通信层 | 11 | 2 | 0 | 9 | **18.2%** |
+| P2 通信层 | 11 | 4 | 0 | 7 | **36.4%** |
 | P3 数据平台 | 7 | 0 | 0 | 7 | **0%** |
 | P4 核心业务 | 18 | 0 | 0 | 18 | **0%** |
 | P5 系统集成 | 5 | 0 | 0 | 5 | **0%** |
 | P6 增强功能 | 5 | 0 | 0 | 5 | **0%** |
-| P7 测试发布 | 9 | 0 | 0 | 9 | **0%** |
-| **合计** | **70** | **18** | **0** | **52** | **25.7%** |
+| P7 测试发布 | 9 | 0 | 1 | 8 | **0% — 测试框架进行中** |
+| **合计** | **70** | **20** | **0** | **50** | **28.6%** |
 
 > 注：P1 拆分子任务后总数为 70 项（原 64 项 + 1.1a 安装包 + 1.1b 编译验证 + 1.2a 示例对 + P0 规划 3 项）。
 
 ## 🔜 下一任务
 
-**Phase 2.2：Modbus TCP 驱动** — FluentModbus、功能码 01-10、Span<T> 零分配。
+**Phase 2.5：OPC UA 客户端驱动** — OPCFoundation、安全策略、证书管理。

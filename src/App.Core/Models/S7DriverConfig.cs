@@ -1,10 +1,30 @@
 namespace App.Core;
 
 /// <summary>
+/// Siemens PLC CPU 类型（与 S7netplus 的 CpuType 枚举值对齐，
+/// 但用字符串避免在 Core 层引入 S7netplus 依赖）。
+/// </summary>
+public static class S7CpuType
+{
+    public const string S7200 = "S7200";
+    public const string S7300 = "S7300";
+    public const string S7400 = "S7400";
+    public const string S71200 = "S71200";
+    public const string S71500 = "S71500";
+    public const string Logo0BA8 = "Logo0BA8";
+    public const string S7200Smart = "S7200Smart";
+}
+
+/// <summary>
 /// Siemens S7 驱动配置。
 /// </summary>
 public sealed class S7DriverConfig : DriverConfigBase
 {
+    /// <summary>
+    /// PLC CPU 类型。
+    /// </summary>
+    public string CpuType { get; set; } = S7CpuType.S71200;
+
     /// <summary>
     /// PLC IP 地址。
     /// </summary>
