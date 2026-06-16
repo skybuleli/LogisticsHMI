@@ -2,7 +2,7 @@
 
 > 最后更新：2026-06-16
 > 当前阶段：Phase 2 — 通信层开发 🔄 进行中（2026-06-16）
-> 完成度：20/70 任务 (28.6%)
+> 完成度：23/70 任务 (32.9%)
 ---
 
 ## ── 图例 ──
@@ -94,7 +94,7 @@
 | 2.5 | OPC UA 客户端驱动（OPCFoundation、安全策略、证书） | ✅ | 2026-06-16 | src/App.Infrastructure/Drivers/OpcUaDriver.cs, src/App.Core/Models/OpcUaDriverConfig.cs, tests/App.Infrastructure.Tests/OpcUaDriverTests.cs (22项测试) |
 | 2.6 | MQTT 驱动（MQTTnet 5、QoS、Will Message、TLS） | ✅ | 2026-06-16 | src/App.Infrastructure/Drivers/MqttDriver.cs, src/App.Core/Models/MqttDriverConfig.cs, tests/App.Infrastructure.Tests/MqttDriverTests.cs (18项测试) |
 | 2.7 | 连接池管理器（复用、限流、健康检查） | ✅ | 2026-06-16 | src/App.Core/Interfaces/IDeviceConnectionPool.cs, src/App.Core/Interfaces/IDeviceDriverFactory.cs, src/App.Infrastructure/ConnectionPoolManager.cs, src/App.Infrastructure/DeviceDriverFactory.cs, tests/App.Infrastructure.Tests/ConnectionPoolManagerTests.cs (32项测试) |
-| 2.8 | 心跳与自动重连（指数退避、事件通知） | ⬜ | — | — |
+| 2.8 | 心跳与自动重连（IHeartbeatService、心跳 Tick/Missed/Recovered 事件、连续丢失阈值检测） | ✅ | 2026-06-16 | src/App.Core/Interfaces/IHeartbeatService.cs, src/App.Core/Models/HeartbeatModels.cs, src/App.Infrastructure/HeartbeatService.cs, tests/App.Infrastructure.Tests/HeartbeatServiceTests.cs (23项测试) |
 | 2.9 | 设备数据缓存层（MemoryCache、TTL、写直达） | ⬜ | — | — |
 | 2.10 | 模拟设备驱动（VirtualDevice 堆垛机/输送线/传感器） | ⬜ | — | — |
 | 2.11 | 通信诊断面板（状态灯、延迟、收发计数、原始帧查看） | ⬜ | — | — |
@@ -189,7 +189,7 @@
 # ===================================================================
 | ID | 任务 | 状态 | 完成时间 | 证据 |
 |----|------|------|----------|------|
-| 7.1 | 单元测试框架（xUnit + Moq + AutoFixture，贯穿 Phase 1~6） | 🔄 | 2026-06-16 | tests/App.Core.Tests (18项), tests/App.Infrastructure.Tests (46项), 共64项测试全通过 |
+| 7.1 | 单元测试框架（xUnit + Moq + AutoFixture，贯穿 Phase 1~6） | 🔄 | 2026-06-16 | tests/App.Core.Tests (18项), tests/App.Infrastructure.Tests (199项), 共217项测试全通过 |
 | 7.2 | 集成测试（TestContainers 容器化测试，Phase 3 起） | ⬜ | — | — |
 | 7.3 | 性能基准测试（BenchmarkDotNet，Phase 2 起） | ⬜ | — | — |
 | 7.4 | 压力稳定性测试（72h 连续运行、内存泄漏检测） | ⬜ | — | — |
@@ -207,16 +207,16 @@
 |-------|--------|--------|--------|--------|--------|
 | P0 规划 | 5 | 5 | 0 | 0 | **100%** |
 | P1 基础框架 | 12 | 12 | 0 | 0 | **100% ✅** |
-| P2 通信层 | 11 | 7 | 0 | 4 | **63.6%** |
+| P2 通信层 | 11 | 8 | 0 | 3 | **72.7%** |
 | P3 数据平台 | 7 | 0 | 0 | 7 | **0%** |
 | P4 核心业务 | 18 | 0 | 0 | 18 | **0%** |
 | P5 系统集成 | 5 | 0 | 0 | 5 | **0%** |
 | P6 增强功能 | 5 | 0 | 0 | 5 | **0%** |
 | P7 测试发布 | 9 | 0 | 1 | 8 | **0% — 测试框架进行中** |
-| **合计** | **70** | **22** | **0** | **48** | **31.4%** |
+| **合计** | **70** | **23** | **0** | **47** | **32.9%** |
 
 > 注：P1 拆分子任务后总数为 70 项（原 64 项 + 1.1a 安装包 + 1.1b 编译验证 + 1.2a 示例对 + P0 规划 3 项）。
 
 ## 🔜 下一任务
 
-**Phase 2.8：心跳与自动重连** — 指数退避、事件通知。
+**Phase 2.9：设备数据缓存层** — MemoryCache、TTL、写直达。

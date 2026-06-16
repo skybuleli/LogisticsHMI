@@ -26,6 +26,9 @@ public interface IConfigurationService
     /// <summary>设备扫描配置。</summary>
     DeviceScanConfig DeviceScan { get; }
 
+    /// <summary>心跳配置。</summary>
+    HeartbeatConfig Heartbeat { get; }
+
     /// <summary>配置变更事件（热重载时触发）。</summary>
     event EventHandler<ConfigChangedEventArgs>? ConfigChanged;
 

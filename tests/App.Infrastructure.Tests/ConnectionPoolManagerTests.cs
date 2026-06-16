@@ -54,6 +54,7 @@ public class ConnectionPoolManagerTests
         public ThemeConfig Theme => Current.Theme;
         public CommunicationConfig Communication => Current.Communication;
         public DeviceScanConfig DeviceScan => Current.DeviceScan;
+        public HeartbeatConfig Heartbeat => Current.Heartbeat;
         public event EventHandler<ConfigChangedEventArgs>? ConfigChanged
     {
         add { }
