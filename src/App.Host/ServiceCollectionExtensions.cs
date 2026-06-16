@@ -1,4 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using App.Core;
+using App.Infrastructure;
+using App.Infrastructure.Drivers;
 using App.UI;
 using App.UI.Services;
 using App.UI.ViewModels;
@@ -33,9 +36,12 @@ internal static class ServiceCollectionExtensions
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IWindowService, WindowService>();
 
-        // ── 基础设施服务（后续 Phase 启用）────────────────────
-        // services.AddSingleton<IDeviceManager, DeviceManager>();
-        // services.AddSingleton<IAlarmService, AlarmService>();
+        // ── 配置服务 ─────────────────────────────────────────
+        services.AddSingleton<IConfigurationService, ConfigurationService>();
+
+        // ── Phase 2 通信服务 ──────────────────────────────────
+        services.AddTransient<ModbusTcpDriver>();
+        // TODO: Phase 2.7 实现 IDeviceDriverFactory 后，通过工厂管理多设备驱动实例
 
         return services;
     }

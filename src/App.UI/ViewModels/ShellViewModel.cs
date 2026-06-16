@@ -17,15 +17,18 @@ public partial class ShellViewModel : ViewModelBase, IDisposable
     private readonly INavigationService _navigationService;
     private readonly ThemeService _themeService;
     private readonly IDialogService _dialogService;
+    private readonly IConfigurationService _configService;
 
     public ShellViewModel(
         INavigationService navigationService,
         ThemeService themeService,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        IConfigurationService configService)
     {
         _navigationService = navigationService;
         _themeService = themeService;
         _dialogService = dialogService;
+        _configService = configService;
         _currentThemeName = _themeService.CurrentThemeName;
         StatusBar = new StatusBarViewModel();
         Title = "物流上位机系统";
@@ -121,7 +124,7 @@ public partial class ShellViewModel : ViewModelBase, IDisposable
         _navigationService.RegisterPage("monitor", "实时监控", "📡",
             () => new MonitorViewModel());
         _navigationService.RegisterPage("settings", "系统设置", "⚙️",
-            () => new SettingsViewModel());
+            () => new SettingsViewModel(_configService));
     }
 
     private void InitializeMenu()

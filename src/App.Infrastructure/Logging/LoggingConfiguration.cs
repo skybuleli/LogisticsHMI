@@ -11,12 +11,12 @@ namespace App.Infrastructure.Logging;
 public static class LoggingConfiguration
 {
     /// <summary>
-    /// 主日志文件路径模式（按天滚动，保留 30 天）。
+    /// 主日志文件路径模式（按天滚动，默认保留 30 天）。
     /// </summary>
     private const string MainLogPath = "logs/logistics-hmi-.log";
 
     /// <summary>
-    /// 通信日志文件路径模式（独立文件，按天滚动）。
+    /// 通信日志文件路径模式（独立文件，按天滚动，默认保留 14 天）。
     /// </summary>
     private const string CommLogPath = "logs/comm-.log";
 
@@ -32,13 +32,17 @@ public static class LoggingConfiguration
     /// <summary>
     /// 配置并创建 Serilog 根 Logger。
     /// </summary>
-    public static Logger CreateLogger()
+    public static Logger CreateLogger(LoggingLevelSwitch? levelSwitch = null)
     {
-        return new LoggerConfiguration()
-            // 根级别设为 Debug——子管道（通信日志）需要接收 Debug 事件
+        var config = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("System", LogEventLevel.Warning)
+            .MinimumLevel.Override("System", LogEventLevel.Warning);
+
+        if (levelSwitch != null)
+            config = config.MinimumLevel.ControlledBy(levelSwitch);
+
+        return config
             // ── 控制台 Sink（仅 Info+，短格式适合终端）──
             .WriteTo.Console(
                 restrictedToMinimumLevel: LogEventLevel.Information,

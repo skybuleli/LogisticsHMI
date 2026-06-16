@@ -1,13 +1,19 @@
+using System;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 using App.Infrastructure.Logging;
 using App.UI.Services;
+using App.Core;
+using App.Infrastructure;
 
 namespace App.Host;
 
 internal static class Program
 {
+    [STAThread]
     private static void Main(string[] args)
     {
         // 单实例检测
@@ -19,8 +25,11 @@ internal static class Program
             return;
         }
 
+        // 创建 Serilog 级别开关，支持运行时动态调整
+        var levelSwitch = new LoggingLevelSwitch();
+
         // 配置 Serilog（主日志 + 通信日志 + 控制台）
-        Log.Logger = LoggingConfiguration.CreateLogger();
+        Log.Logger = LoggingConfiguration.CreateLogger(levelSwitch);
 
         try
         {
@@ -29,8 +38,8 @@ internal static class Program
 
             // 构建 DI 容器
             var services = new ServiceCollection();
+            services.AddSingleton(levelSwitch);
             services.AddLogisticsHmiServices();
-            // 注册 Serilog ILogger 到 DI（所有注入 ILogger<T> 的服务都可使用）
             services.AddLogging(builder => builder.AddSerilog(dispose: true));
             var serviceProvider = services.BuildServiceProvider();
 
@@ -38,6 +47,9 @@ internal static class Program
             App.UI.App.ServiceProvider = serviceProvider;
 
             Log.Information("DI 容器已构建");
+
+            // 从配置读取日志级别并应用到 Serilog（使 appsettings.json 的 MinimumLevel 实时生效）
+            ApplyLogLevelFromConfig(serviceProvider, levelSwitch);
 
             // 构建并启动 Avalonia 应用
             BuildAvaloniaApp()
@@ -50,6 +62,29 @@ internal static class Program
         finally
         {
             Log.CloseAndFlush();
+        }
+    }
+
+    /// <summary>
+    /// 从 IConfigurationService 读取 MinimumLevel 并应用到 Serilog LevelSwitch。
+    /// </summary>
+    private static void ApplyLogLevelFromConfig(IServiceProvider serviceProvider, LoggingLevelSwitch levelSwitch)
+    {
+        try
+        {
+            var configurationService = serviceProvider.GetService<App.Core.IConfigurationService>();
+            var configuredLevel = configurationService?.Logging?.MinimumLevel;
+
+            if (!string.IsNullOrWhiteSpace(configuredLevel) &&
+                Enum.TryParse<LogEventLevel>(configuredLevel, true, out var level))
+            {
+                levelSwitch.MinimumLevel = level;
+                Log.Information("日志级别已从配置生效：{Level}", level);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "应用配置日志级别失败，使用默认级别");
         }
     }
 

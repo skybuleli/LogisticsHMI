@@ -2,28 +2,182 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
-             x:Class="App.UI.Views.SettingsView">
-    <Border Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center">
-        <StackPanel Spacing="16" HorizontalAlignment="Center">
-            <TextBlock Text="⚙️" FontSize="64" HorizontalAlignment="Center" />
+             xmlns:conv="clr-namespace:App.UI.Converters"
+             xmlns:vm="clr-namespace:App.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:Class="App.UI.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="24" MaxWidth="720">
+
+            <!-- 页标题 -->
             <TextBlock Text="系统设置"
-                       FontSize="28" FontWeight="700"
-                       Foreground="{DynamicResource TextPrimary}"
-                       HorizontalAlignment="Center" />
-            <TextBlock Text="通信参数配置、报警规则、用户权限管理"
-                       FontSize="14"
+                       FontSize="24" FontWeight="700"
+                       Foreground="{DynamicResource TextPrimary}" />
+            <TextBlock Text="配置应用参数，修改后点击「保存配置」生效"
+                       FontSize="13"
                        Foreground="{DynamicResource TextSecondary}"
-                       HorizontalAlignment="Center"
-                       TextWrapping="Wrap" />
-            <Border Padding="16,10" CornerRadius="8"
-                    Background="{DynamicResource BrushPrimary}" Opacity="0.1"
-                    Margin="0,8,0,0">
-                <TextBlock Text="🚧 Phase 1.9 配置管理 — 待开发"
-                           FontSize="13"
-                           Foreground="{DynamicResource BrushPrimary}"
-                           HorizontalAlignment="Center" />
+                       Margin="0,-12,0,0" />
+
+            <!-- ════════════════════════════════════════════
+                 日志配置
+                 ════════════════════════════════════════════ -->
+            <Border Padding="20" CornerRadius="10"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="📋 日志配置" FontSize="16" FontWeight="600" />
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="日志级别" VerticalAlignment="Center" />
+                        <ComboBox Grid.Column="1"
+                                  SelectedItem="{Binding LogLevel}"
+                                  ItemsSource="{Binding LogLevelOptions}" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="主日志保留天数" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding MainLogRetentionDays}"
+                                       Minimum="1" Maximum="365" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="通信日志保留天数" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding CommLogRetentionDays}"
+                                       Minimum="1" Maximum="365" />
+                    </Grid>
+                </StackPanel>
             </Border>
+
+            <!-- ════════════════════════════════════════════
+                 窗口配置
+                 ════════════════════════════════════════════ -->
+            <Border Padding="20" CornerRadius="10"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="🪟 窗口配置" FontSize="16" FontWeight="600" />
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="窗口标题" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding WindowTitle}" />
+                    </Grid>
+
+                    <CheckBox IsChecked="{Binding StartMaximized}"
+                              Content="启动时最大化" />
+
+                    <CheckBox IsChecked="{Binding MinimizeToTrayOnClose}"
+                              Content="关闭时最小化到托盘" />
+                </StackPanel>
+            </Border>
+
+            <!-- ════════════════════════════════════════════
+                 主题配置
+                 ════════════════════════════════════════════ -->
+            <Border Padding="20" CornerRadius="10"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="🎨 主题配置" FontSize="16" FontWeight="600" />
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="默认主题" VerticalAlignment="Center" />
+                        <ComboBox Grid.Column="1"
+                                  SelectedItem="{Binding DefaultTheme}"
+                                  ItemsSource="{Binding ThemeOptions}" />
+                    </Grid>
+
+                    <CheckBox IsChecked="{Binding AllowThemeSwitch}"
+                              Content="允许运行时切换主题" />
+                </StackPanel>
+            </Border>
+
+            <!-- ════════════════════════════════════════════
+                 通信配置
+                 ════════════════════════════════════════════ -->
+            <Border Padding="20" CornerRadius="10"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="🔌 通信配置" FontSize="16" FontWeight="600" />
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="默认超时 (ms)" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding DefaultTimeoutMs}"
+                                       Minimum="100" Maximum="60000"
+                                       Increment="100" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="心跳间隔 (ms)" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding HeartbeatIntervalMs}"
+                                       Minimum="1000" Maximum="300000"
+                                       Increment="1000" />
+                    </Grid>
+
+                    <CheckBox IsChecked="{Binding AutoReconnect}"
+                              Content="自动重连" />
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="最大重试次数" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding ReconnectMaxRetries}"
+                                       Minimum="0" Maximum="100" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ════════════════════════════════════════════
+                 设备扫描配置
+                 ════════════════════════════════════════════ -->
+            <Border Padding="20" CornerRadius="10"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="📡 设备扫描配置" FontSize="16" FontWeight="600" />
+
+                    <CheckBox IsChecked="{Binding ScanEnabled}"
+                              Content="启用自动扫描" />
+
+                    <Grid ColumnDefinitions="140,*">
+                        <TextBlock Text="扫描间隔 (ms)" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding ScanIntervalMs}"
+                                       Minimum="50" Maximum="10000"
+                                       Increment="50" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ════════════════════════════════════════════
+                 操作按钮
+                 ════════════════════════════════════════════ -->
+            <StackPanel Orientation="Horizontal" Spacing="12"
+                        HorizontalAlignment="Right">
+                <Button Content="🔄 重新加载"
+                        Command="{Binding LoadConfigCommand}"
+                        Padding="16,10" CornerRadius="8"
+                        Background="Transparent"
+                        BorderBrush="{DynamicResource BrushBorder}"
+                        BorderThickness="1"
+                        Cursor="Hand" />
+
+                <Button Content="💾 保存配置"
+                        Command="{Binding SaveConfigCommand}"
+                        Padding="16,10" CornerRadius="8"
+                        Background="{DynamicResource BrushPrimary}"
+                        Foreground="White"
+                        Cursor="Hand" />
+            </StackPanel>
+
+            <!-- 保存提示 -->
+            <TextBlock Text="{Binding SaveMessage}"
+                       FontSize="13"
+                       Foreground="{DynamicResource BrushSuccess}"
+                       HorizontalAlignment="Right"
+                       IsVisible="{Binding SaveMessage, Converter={x:Static conv:StringNotEmptyConverter.Instance}}" />
+
+            <Border Height="40" Background="Transparent" />
         </StackPanel>
-    </Border>
+    </ScrollViewer>
 </UserControl>

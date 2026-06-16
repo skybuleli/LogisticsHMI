@@ -1,0 +1,43 @@
+## .NET build outputs
+bin/
+obj/
+out/
+publish/
+
+## Avalonia / UI preview artifacts
+.g.props
+.g.targets
+.avalonia/
+*.user
+*.rsuser
+*.suo
+*.userprefs
+*.pidb
+*.vspscc
+*.vssscc
+*.sln.docstates
+
+## IDE / OS junk
+.idea/
+.vscode/
+.vs/
+.DS_Store
+Thumbs.db
+
+## Test & coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+## Logs & local artifacts
+logs/
+*.log
+
+## Native AOT / RD.xml scratch
+rd.xml
+*.ilc.*
+
+## Tool-specific
+.ionide/
+paket-files/

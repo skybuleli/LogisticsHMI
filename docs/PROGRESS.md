@@ -1,9 +1,8 @@
 # 物流上位机系统 · 任务进度追踪
 
 > 最后更新：2026-06-16
-> 当前阶段：Phase 1 — 基础框架搭建（进行中）
-> 完成度：11/70 任务 (15.7%)
-
+> 当前阶段：Phase 2 — 通信层开发 🔄 进行中（2026-06-16）
+> 完成度：18/70 任务 (25.7%)
 ---
 
 ## ── 图例 ──
@@ -80,7 +79,7 @@
 ### 1.9 配置管理
 | ID | 任务 | 状态 | 完成时间 | 证据 |
 |----|------|------|----------|------|
-| 1.9 | Options Pattern、appsettings.json、热重载、配置 UI | ⬜ | — | — |
+| 1.9 | Options Pattern、appsettings.json、热重载、配置 UI | ✅ | 2026-06-16 | AppConfig/IConfigurationService (App.Core), ConfigurationService (App.Infrastructure), appsettings.json, SettingsViewModel/SettingsView (完整配置编辑UI), StringNotEmptyConverter, ShellViewModel注入, DI注册 |
 
 # ===================================================================
 ## Phase 2：通信层开发 — 让上位机"听得见、说得出"（3~4 周）
@@ -88,8 +87,8 @@
 # ===================================================================
 | ID | 任务 | 状态 | 完成时间 | 证据 |
 |----|------|------|----------|------|
-| 2.1 | IDeviceDriver 接口设计（Config、枚举、事件） | ⬜ | — | — |
-| 2.2 | Modbus TCP 驱动（FluentModbus、功能码 01-10、Span<T>） | ⬜ | — | — |
+| 2.1 | IDeviceDriver 接口设计（Config、枚举、事件） | ✅ | 2026-06-16 | src/App.Core/Interfaces/IDeviceDriver.cs, src/App.Core/Models/DriverConfigBase.cs, src/App.Core/Events/ConnectionStateChangedEventArgs.cs |
+| 2.2 | Modbus TCP 驱动（裸 TCP 实现功能码 01-10、Span<T> 零分配） | ✅ | 2026-06-16 | src/App.Infrastructure/Drivers/ModbusTcpDriver.cs |
 | 2.3 | Modbus RTU 驱动（System.IO.Ports、CRC16） | ⬜ | — | — |
 | 2.4 | Siemens S7 驱动（S7netplus、DB/I/Q/M、TSAP） | ⬜ | — | — |
 | 2.5 | OPC UA 客户端驱动（OPCFoundation、安全策略、证书） | ⬜ | — | — |
@@ -207,19 +206,17 @@
 | Phase | 总任务 | 已完成 | 进行中 | 待开始 | 完成率 |
 |-------|--------|--------|--------|--------|--------|
 | P0 规划 | 5 | 5 | 0 | 0 | **100%** |
-| P1 基础框架 | 12 | 11 | 0 | 1 | **92%** |
-| P2 通信层 | 11 | 0 | 0 | 11 | **0%** |
+| P1 基础框架 | 12 | 12 | 0 | 0 | **100% ✅** |
+| P2 通信层 | 11 | 2 | 0 | 9 | **18.2%** |
 | P3 数据平台 | 7 | 0 | 0 | 7 | **0%** |
 | P4 核心业务 | 18 | 0 | 0 | 18 | **0%** |
 | P5 系统集成 | 5 | 0 | 0 | 5 | **0%** |
 | P6 增强功能 | 5 | 0 | 0 | 5 | **0%** |
 | P7 测试发布 | 9 | 0 | 0 | 9 | **0%** |
-| **合计** | **70** | **16** | **0** | **54** | **22.9%** |
+| **合计** | **70** | **18** | **0** | **52** | **25.7%** |
 
 > 注：P1 拆分子任务后总数为 70 项（原 64 项 + 1.1a 安装包 + 1.1b 编译验证 + 1.2a 示例对 + P0 规划 3 项）。
 
 ## 🔜 下一任务
 
-**Phase 1.8：窗口管理** — 主窗口配置、弹窗管理、系统托盘、单实例检测。
-
-**Phase 1.9：配置管理** — Options Pattern、appsettings.json、热重载、配置 UI。
+**Phase 2.2：Modbus TCP 驱动** — FluentModbus、功能码 01-10、Span<T> 零分配。
