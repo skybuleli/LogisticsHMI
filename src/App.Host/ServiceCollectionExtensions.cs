@@ -58,6 +58,7 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<S7Driver>();
         services.AddTransient<OpcUaDriver>();
         services.AddTransient<MqttDriver>();
+        services.AddTransient<VirtualDeviceDriver>();
 
         return services;
     }

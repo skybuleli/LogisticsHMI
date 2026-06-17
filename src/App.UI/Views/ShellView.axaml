@@ -177,10 +177,11 @@
                            Foreground="{DynamicResource TextSecondary}" />
             </Border>
 
-            <!-- 页面内容区（使用 PageContainer 包裹） -->
+            <!-- 页面内容区（ContentControl 直接渲染，DataTemplates 继承自 UserControl 作用域） -->
             <Border Grid.Row="2" Padding="20,0,20,8">
-                <controls:PageContainer
-                    PageContent="{Binding CurrentPage}" />
+                <ContentControl Content="{Binding CurrentPage}"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch" />
             </Border>
         </Grid>
 

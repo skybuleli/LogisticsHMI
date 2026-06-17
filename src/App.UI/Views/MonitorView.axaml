@@ -2,28 +2,270 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
-             x:Class="App.UI.Views.MonitorView">
-    <Border Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center">
-        <StackPanel Spacing="16" HorizontalAlignment="Center">
-            <TextBlock Text="📡" FontSize="64" HorizontalAlignment="Center" />
-            <TextBlock Text="实时监控"
-                       FontSize="28" FontWeight="700"
-                       Foreground="{DynamicResource TextPrimary}"
-                       HorizontalAlignment="Center" />
-            <TextBlock Text="设备运行状态、实时数据曲线、任务执行进度"
-                       FontSize="14"
-                       Foreground="{DynamicResource TextSecondary}"
-                       HorizontalAlignment="Center"
-                       TextWrapping="Wrap" />
-            <Border Padding="16,10" CornerRadius="8"
-                    Background="{DynamicResource BrushPrimary}" Opacity="0.1"
-                    Margin="0,8,0,0">
-                <TextBlock Text="🚧 Phase 2 通信层 — 待开发"
-                           FontSize="13"
-                           Foreground="{DynamicResource BrushPrimary}"
-                           HorizontalAlignment="Center" />
-            </Border>
-        </StackPanel>
-    </Border>
+             xmlns:vm="clr-namespace:App.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="App.UI.Views.MonitorView"
+             x:DataType="vm:MonitorViewModel">
+    <DockPanel Margin="24">
+
+        <!-- ═══ 顶栏 ═══ -->
+        <Border DockPanel.Dock="Top" Margin="0,0,0,20">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel>
+                    <TextBlock Text="{Binding Title}"
+                               FontSize="22" FontWeight="600"
+                               Foreground="{DynamicResource SystemAccentColor}" />
+                    <TextBlock Text="通信层运行状态诊断"
+                               FontSize="13"
+                               Foreground="{DynamicResource TextTertiary}"
+                               Margin="0,4,0,0" />
+                </StackPanel>
+                <Border Grid.Column="1" Padding="12,6" CornerRadius="6"
+                        BorderBrush="{DynamicResource SystemAccentColor}" BorderThickness="1">
+                    <TextBlock Text="{Binding LastRefreshTime}"
+                               FontSize="14" FontWeight="500" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <ScrollViewer>
+            <StackPanel Spacing="16">
+
+                <!-- ═══ 四张状态卡片 ═══ -->
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="14">
+
+                    <Border Padding="20" CornerRadius="10"
+                            Background="{DynamicResource ColorCardDevice}" Opacity="0.9">
+                        <StackPanel>
+                            <TextBlock Text="总设备" FontSize="13" Foreground="White" Opacity="0.8" />
+                            <TextBlock Text="{Binding TotalDevices}"
+                                       FontSize="36" FontWeight="700"
+                                       Foreground="White"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="台" FontSize="13"
+                                       Foreground="White" Opacity="0.8"
+                                       Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Padding="20" CornerRadius="10"
+                            Background="{DynamicResource ColorCardTask}" Opacity="0.9">
+                        <StackPanel>
+                            <TextBlock Text="在线设备" FontSize="13"
+                                       Foreground="White" Opacity="0.8" />
+                            <TextBlock Text="{Binding OnlineDevices}"
+                                       FontSize="36" FontWeight="700"
+                                       Foreground="White"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="台" FontSize="13"
+                                       Foreground="White" Opacity="0.8"
+                                       Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Padding="20" CornerRadius="10"
+                            Background="{DynamicResource ColorOffline}" Opacity="0.85">
+                        <StackPanel>
+                            <TextBlock Text="离线设备" FontSize="13"
+                                       Foreground="White" Opacity="0.8" />
+                            <TextBlock Text="{Binding OfflineDevices}"
+                                       FontSize="36" FontWeight="700"
+                                       Foreground="White"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="台" FontSize="13"
+                                       Foreground="White" Opacity="0.8"
+                                       Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Padding="20" CornerRadius="10"
+                            Background="{DynamicResource ColorCardComplete}" Opacity="0.9">
+                        <StackPanel>
+                            <TextBlock Text="缓存命中率" FontSize="13"
+                                       Foreground="White" Opacity="0.8" />
+                            <TextBlock Text="{Binding CacheHitRate}"
+                                       FontSize="36" FontWeight="700"
+                                       Foreground="White"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text="{Binding CacheEntryCount}"
+                                       FontSize="13"
+                                       Foreground="White" Opacity="0.8"
+                                       Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- ═══ 连接池详情 ═══ -->
+                <Border Padding="16" CornerRadius="10"
+                        Background="{DynamicResource BrushBgSecondary}"
+                        BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <TextBlock Text="连接池" FontSize="16" FontWeight="600"
+                                       Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Column="1" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding PoolUptime}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextSecondary}" />
+                        </Grid>
+
+                        <Separator Height="1" Background="{DynamicResource BrushBorder}" Opacity="0.3" />
+
+                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                            <TextBlock Text="累计连接" FontSize="13"
+                                       Foreground="{DynamicResource TextSecondary}" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding TotalConnects}"
+                                       FontSize="13" FontWeight="600"
+                                       Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="1" Text="连接失败" FontSize="13"
+                                       Foreground="{DynamicResource TextSecondary}" />
+                            <TextBlock Grid.Row="1" Grid.Column="2"
+                                       Text="{Binding TotalConnectFailures}"
+                                       FontSize="13" FontWeight="600"
+                                       Foreground="{DynamicResource BrushDanger}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ═══ 缓存统计 ═══ -->
+                <Border Padding="16" CornerRadius="10"
+                        Background="{DynamicResource BrushBgSecondary}"
+                        BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="缓存统计" FontSize="16" FontWeight="600"
+                                   Foreground="{DynamicResource TextPrimary}" />
+                        <Separator Height="1" Background="{DynamicResource BrushBorder}" Opacity="0.3" />
+                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto">
+                            <TextBlock Text="读取次数" FontSize="13"
+                                       Foreground="{DynamicResource TextSecondary}" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding CacheTotalGets}"
+                                       FontSize="13" FontWeight="600"
+                                       Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="1" Text="写入次数" FontSize="13"
+                                       Foreground="{DynamicResource TextSecondary}" />
+                            <TextBlock Grid.Row="1" Grid.Column="2"
+                                       Text="{Binding CacheTotalSets}"
+                                       FontSize="13" FontWeight="600"
+                                       Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Row="2" Text="淘汰次数" FontSize="13"
+                                       Foreground="{DynamicResource TextSecondary}" />
+                            <TextBlock Grid.Row="2" Grid.Column="2"
+                                       Text="{Binding CacheTotalEvictions}"
+                                       FontSize="13" FontWeight="600"
+                                       Foreground="{DynamicResource BrushWarning}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ═══ 设备列表 ═══ -->
+                <Border Padding="16" CornerRadius="10"
+                        Background="{DynamicResource BrushBgSecondary}"
+                        BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                    <StackPanel Spacing="8">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <TextBlock Text="设备列表" FontSize="16" FontWeight="600"
+                                       Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Grid.Column="1" />
+                            <Border Grid.Column="2" Padding="6,2" CornerRadius="4"
+                                    Background="{DynamicResource SystemAccentColor}" Opacity="0.15">
+                                <TextBlock Text="{Binding DeviceItems.Count}"
+                                           FontSize="11" FontWeight="500" />
+                            </Border>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding DeviceItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="vm:DeviceItemViewModel">
+                                    <Border Padding="0,8"
+                                            BorderBrush="{DynamicResource BrushBorder}"
+                                            BorderThickness="0,0,0,1">
+                                        <Grid ColumnDefinitions="12,Auto,*,Auto,70">
+                                            <Ellipse Width="8" Height="8"
+                                                     Fill="{Binding StateColor}"
+                                                     VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="1" Margin="8,0,0,0"
+                                                       Text="{Binding DeviceId}"
+                                                       FontSize="13" FontWeight="500"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource TextPrimary}" />
+                                            <Border Grid.Column="2" Margin="8,0,0,0"
+                                                    Padding="6,1" CornerRadius="3"
+                                                    Background="{DynamicResource SystemAccentColor}" Opacity="0.12"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding DriverType}"
+                                                           FontSize="10"
+                                                           Foreground="{DynamicResource SystemAccentColor}" />
+                                            </Border>
+                                            <TextBlock Grid.Column="3"
+                                                       Text="{Binding StateText}"
+                                                       FontSize="12"
+                                                       Foreground="{Binding StateColor}"
+                                                       VerticalAlignment="Center" />
+                                            <Button Grid.Column="4" Content="清除"
+                                                    Command="{Binding $parent[ItemsControl].DataContext.ClearDeviceCacheCommand}"
+                                                    CommandParameter="{Binding DeviceId}"
+                                                    Padding="8,2" CornerRadius="3"
+                                                    FontSize="10"
+                                                    HorizontalAlignment="Right" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border Padding="16" CornerRadius="6"
+                                Background="{DynamicResource BrushBorder}" Opacity="0.2"
+                                IsVisible="False">
+                            <TextBlock Text="暂无设备"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       HorizontalAlignment="Center" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- ═══ 地址调试 ═══ -->
+                <Border Padding="16" CornerRadius="10"
+                        Background="{DynamicResource BrushBgSecondary}"
+                        BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="地址调试" FontSize="16" FontWeight="600"
+                                   Foreground="{DynamicResource TextPrimary}" />
+                        <TextBlock Text="输入设备 ID 和地址进行读取测试"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextSecondary}" />
+                        <Grid ColumnDefinitions="*,*,60,Auto" ColumnSpacing="8">
+                            <TextBox Text="{Binding DebugDeviceId}"
+                                     PlaceholderText="设备 ID" />
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding DebugAddress}"
+                                     PlaceholderText="地址" />
+                            <NumericUpDown Grid.Column="2"
+                                           Value="{Binding DebugLength}"
+                                           Minimum="1" Maximum="256" />
+                            <Button Grid.Column="3"
+                                    Content="读取"
+                                    Command="{Binding ReadAddressCommand}"
+                                    Padding="16,8" CornerRadius="6" />
+                        </Grid>
+                        <Border Padding="12" CornerRadius="6"
+                                Background="{DynamicResource BrushSidebar}">
+                            <TextBlock Text="{Binding DebugResult}"
+                                       FontSize="12" FontFamily="Consolas"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       TextWrapping="Wrap" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <Border Height="24" />
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </DockPanel>
 </UserControl>

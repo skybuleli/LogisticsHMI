@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using App.Core;
 using App.UI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace App.UI.ViewModels;
 
@@ -122,7 +123,7 @@ public partial class ShellViewModel : ViewModelBase, IDisposable
         _navigationService.RegisterPage("dashboard", "仪表盘", "📊",
             () => new HomeViewModel(_themeService));
         _navigationService.RegisterPage("monitor", "实时监控", "📡",
-            () => new MonitorViewModel());
+            () => App.ServiceProvider.GetRequiredService<MonitorViewModel>());
         _navigationService.RegisterPage("settings", "系统设置", "⚙️",
             () => new SettingsViewModel(_configService));
     }

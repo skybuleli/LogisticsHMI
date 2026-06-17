@@ -31,8 +31,9 @@ public sealed class DeviceDriverFactory : IDeviceDriverFactory
             "S7" => CreateS7(config),
             "OPCUA" => CreateOpcUa(config),
             "MQTT" => CreateMqtt(config),
+            "VIRTUALDEVICE" => CreateVirtualDevice(config),
             _ => throw new ArgumentException(
-                $"不支持的驱动类型: '{config.DriverType}'。支持的类型: ModbusTCP, ModbusRTU, S7, OPCUA, MQTT", nameof(config))
+                $"不支持的驱动类型: '{config.DriverType}'。支持的类型: ModbusTCP, ModbusRTU, S7, OPCUA, MQTT, VirtualDevice", nameof(config))
         };
     }
 
@@ -167,5 +168,23 @@ public sealed class DeviceDriverFactory : IDeviceDriverFactory
 
         var logger = _loggerFactory.CreateLogger<MqttDriver>();
         return new MqttDriver(driverCfg, logger);
+    }
+
+    private VirtualDeviceDriver CreateVirtualDevice(DeviceConfigEntry config)
+    {
+        var driverCfg = new VirtualDeviceDriverConfig
+        {
+            DeviceId = config.DeviceId,
+            DisplayName = config.DisplayName,
+            TimeoutMs = config.TimeoutMs,
+            HeartbeatIntervalMs = config.HeartbeatIntervalMs,
+            AutoReconnect = config.AutoReconnect,
+            ReconnectMaxRetries = config.ReconnectMaxRetries,
+            ReconnectBaseDelayMs = config.ReconnectBaseDelayMs,
+            DeviceProfile = config.DeviceProfile
+        };
+
+        var logger = _loggerFactory.CreateLogger<VirtualDeviceDriver>();
+        return new VirtualDeviceDriver(driverCfg, logger);
     }
 }

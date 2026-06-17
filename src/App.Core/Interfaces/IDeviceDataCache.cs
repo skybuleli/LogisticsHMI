@@ -24,4 +24,14 @@ public interface IDeviceDataCache
     /// 清空设备缓存。
     /// </summary>
     void Clear(string deviceId);
+
+    /// <summary>
+    /// 清空全部缓存。
+    /// </summary>
+    void ClearAll();
+
+    /// <summary>
+    /// 获取缓存统计信息。
+    /// </summary>
+    DataCacheStats GetStats();
 }

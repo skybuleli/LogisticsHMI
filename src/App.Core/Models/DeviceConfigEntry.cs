@@ -12,7 +12,7 @@ public class DeviceConfigEntry
     /// <summary>设备唯一标识。</summary>
     public required string DeviceId { get; init; }
 
-    /// <summary>驱动类型：ModbusTCP / ModbusRTU / S7 / OPCUA / MQTT。</summary>
+    /// <summary>驱动类型：ModbusTCP / ModbusRTU / S7 / OPCUA / MQTT / VirtualDevice。</summary>
     public string DriverType { get; set; } = "ModbusTCP";
 
     /// <summary>显示名称。</summary>
@@ -112,4 +112,8 @@ public class DeviceConfigEntry
 
     /// <summary>会话名称。</summary>
     public string? SessionName { get; set; }
+
+    // ── Virtual Device ─────────────────────────────────────
+    /// <summary>虚拟设备类型标签，如 Conveyor / Stacker / Sensor。</summary>
+    public string DeviceProfile { get; set; } = "Generic";
 }
